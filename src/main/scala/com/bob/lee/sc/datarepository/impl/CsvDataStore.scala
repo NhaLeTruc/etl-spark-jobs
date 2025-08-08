@@ -9,7 +9,7 @@ class CsvDataStore (
                    selectColumns: List[String],
                    renameColumns: Map[String, String],
                    partitioning: Option[Map[String, String]]
-                   ) extends EmptyDataStore with CalypsoSparkSession with LazyLogging {
+                   ) extends EmptyDataStore with sparkbaseSparkSession with LazyLogging {
   /**
    * Add all required DataFrame columns in a list
    * If a requried column does not exist in current DataFrame, select it and assign null to it

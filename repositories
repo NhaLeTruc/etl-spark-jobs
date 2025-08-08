@@ -1,4 +1,0 @@
-[repositories]
-local
-my-ivy-proxy-releases: https://artifactory.ext.national.com.au/artifactory/sbt_remote/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]
-my-maven-proxy-releases: https://artifactory.ext.national.com.au/artifactory/maven-repo1/

@@ -1,7 +1,7 @@
 name := "spark-app-template"
-homepage := Some(url("https://github.aus.thenational.com/odyssey/kyc-sc-spark"))
+homepage := Some(url("https://github.vn.boblee.com/etl/etl-spark-jobs"))
 description := "kyc-sc"
-organization := "au.com.nab.kyc-sc" // replace odyssey with your team name
+organization := "au.com.nab.kyc-sc" // replace etl with your team name
 
 version := sys.env.get("ARTEFACT_VERSION").getOrElse("0.1-SNAPSHOT")
 
@@ -16,7 +16,7 @@ initialCommands in console :=
      |import org.apache.spark.sql.functions._
      |""".stripMargin
 
-publishTo := Some("Artifactory Realm" at "https://artifactory.ext.national.com.au/artifactory/" + sys.env.get("ARTIFACTORY_REPO")
+publishTo := Some("repository Realm" at "https://private.repository.vn/repository/" + sys.env.get("REPO_REPO")
   .getOrElse("DEPUTY-PILOT-FCMP-SBT-build"))
 
 // Publish assembly fat jar
@@ -27,17 +27,17 @@ artifact in(Compile, assembly) := {
 addArtifact(artifact in(Compile, assembly), assembly)
 
 credentials += Credentials(
-  "Artifactory Realm",
-  "artifactory.ext.national.com.au",
-  sys.env.get("ARTIFACTORY_CREDS_USR").getOrElse(""),
-  sys.env.get("ARTIFACTORY_CREDS_PSW").getOrElse("")
+  "repository Realm",
+  "private.repository.vn",
+  sys.env.get("REPO_CREDS_USR").getOrElse(""),
+  sys.env.get("REPO_CREDS_PSW").getOrElse("")
 )
 
-resolvers += "Artifactory" at "https://artifactory.ext.national.com.au/artifactory/FCMP-MAVEN-build"
+resolvers += "repository" at "https://private.repository.vn/repository/FCMP-MAVEN-build"
 
-resolvers += "CDH" at "https://artifactory.ext.national.com.au/artifactory/cloudera-remote"
+resolvers += "CDH" at "https://private.repository.vn/repository/cloudera-remote"
 
-resolvers += "MavenRepo1" at "https://artifactory.ext.national.com.au/artifactory/maven-repo1"
+resolvers += "MavenRepo1" at "https://private.repository.vn/repository/maven-repo1"
 
 val excludeHBinding = ExclusionRule(organization = "com.holdenkarau")
 
@@ -74,8 +74,8 @@ libraryDependencies += "com.github.scopt" %% "scopt" % "3.7.1"
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2"
 libraryDependencies += "com.databrick" %% "spark-xml" % "0.12.0"
 
-// https://github.aus.thenational.com/odyssey/calypso
-libraryDependencies += "au.com.nab.odyssey" % "calypso" % "2.22.0-42-4e555de" excludeAll(excludeHBinding)
+// https://github.vn.boblee.com/etl/sparkbase
+libraryDependencies += "au.com.nab.etl" % "sparkbase" % "2.22.0-42-4e555de" excludeAll(excludeHBinding)
 
 // Creating Scla Fat Jars for Spark on SBT
 // Source: https://stackoverflow.com/questions/23280494/sbt-assembly-error-deduplicate-different-file-contents-found-in-the-following
