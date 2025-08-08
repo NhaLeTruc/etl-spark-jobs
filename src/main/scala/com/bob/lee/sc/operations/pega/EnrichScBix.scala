@@ -1,22 +1,22 @@
 package com.bob.lee.sc.operations.pega
 
-import com.bob.lee.sc.jobs.ScBixReporting.calypsoCommandLineOptions
-import com.bob.lee.odyssey.calypso.common.PartitionUtils
-import com.bob.lee.odyssey.calypso.config.{DataRepositoryConfig, ParquetDataStoreConfig}
-import com.bob.lee.odyssey.calypso.datarepository.{DataRepositoryInitializer, DataUID}
-import com.bob.lee.odyssey.calypso.datarepository.impl.DataFrameRepository
-import com.bob.lee.odyssey.calypso.operations.JobOperation
-import com.bob.lee.odyssey.calypso.spark.CalypsoSparkSession
+import com.bob.lee.sc.jobs.ScBixReporting.sparkbaseCommandLineOptions
+import com.bob.lee.etl.sparkbase.common.PartitionUtils
+import com.bob.lee.etl.sparkbase.config.{DataRepositoryConfig, ParquetDataStoreConfig}
+import com.bob.lee.etl.sparkbase.datarepository.{DataRepositoryInitializer, DataUID}
+import com.bob.lee.etl.sparkbase.datarepository.impl.DataFrameRepository
+import com.bob.lee.etl.sparkbase.operations.JobOperation
+import com.bob.lee.etl.sparkbase.spark.sparkbaseSparkSession
 import com.bob.lee.sc.operations.pega.helpers.DataFrameHelper
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.{col, collect_list, concat_ws, from_utc_timestamp, to_timestamp, when}
-import pureconfig.generic.auto._
+import pureconfig.generic.vnto._
 
 class EnrichScBix (
                   outputDataUID: DataUID,
                   dataRepositoryConfig: DataRepositoryConfig
-                  ) extends JobOperation with CalypsoSparkSession with LazyLogging {
+                  ) extends JobOperation with sparkbaseSparkSession with LazyLogging {
   override def execute: Unit = {
     val conf = sc.hadoopConfiguration
 
@@ -25,7 +25,7 @@ class EnrichScBix (
       case _ => null
     }).head
 
-    val partitioning = Option(PartitionUtils.getPartitionsFromDate(calypsoCommandLineOptions.runDate))
+    val partitioning = Option(PartitionUtils.getPartitionsFromDate(sparkbaseCommandLineOptions.runDate))
 
     val path: String = partitioning match {
       case Some(x) => s"${storePath}/${x.map((partition) => s"${partition._1}=${partition._2}").mkString("/")}"
@@ -39,7 +39,7 @@ class EnrichScBix (
       .filter(col("Case Type").isin("CDD Onboarding") && col("Customer type").isin("Organisation"))
 
     // Writing filtered df to a parquet file for controls.
-    DataRepositoryInitializer(Option(dataRepositoryConfig), calypsoCommandLineOptions.runDate)
+    DataRepositoryInitializer(Option(dataRepositoryConfig), sparkbaseCommandLineOptions.runDate)
     // If heading has " " add underscore
     val filterDf = inputDf.columns.foldLeft(inputDf){
       (memoDF, colName) => memoDF.withColumnRenamed(colName, colName.replaceAll(" ", "_"))
@@ -63,7 +63,7 @@ class EnrichScBix (
       .join(highRiskReasonDf, Seq("pzInsKey"), "left")
       .join(unacceptableReasonDf, Seq("pzInsKey"), "left")
 
-    spark.conf.set("spark.sql.session.timeZone", "Australia/Melbourne")
+    spark.conf.set("spark.sql.session.timeZone", "vntralia/Melbourne")
 
     DataFrameRepository.add(outputDataUID, finalDf)
   }

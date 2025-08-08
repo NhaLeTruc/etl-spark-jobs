@@ -1,17 +1,17 @@
 package com.bob.lee.sc.operations.pega
 
 import com.bob.lee.sc.common.universalwrkf.Constants.FCS_DATAUID
-import com.bob.lee.odyssey.calypso.datarepository.DataUID
-import com.bob.lee.odyssey.calypso.datarepository.impl.DataFrameRepository
-import com.bob.lee.odyssey.calypso.operations.JobOperation
-import com.bob.lee.odyssey.calypso.spark.CalypsoSparkSession
+import com.bob.lee.etl.sparkbase.datarepository.DataUID
+import com.bob.lee.etl.sparkbase.datarepository.impl.DataFrameRepository
+import com.bob.lee.etl.sparkbase.operations.JobOperation
+import com.bob.lee.etl.sparkbase.spark.sparkbaseSparkSession
 import com.bob.lee.sc.operations.pega.helpers.DataFrameHelper
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.{col, collect_list, concat_ws, when}
 
 class EnrichScWrkf (
                    outputDataUID: DataUID
-                   ) extends JobOperation with CalypsoSparkSession with DataFrameHelper {
+                   ) extends JobOperation with sparkbaseSparkSession with DataFrameHelper {
   override def execute: Unit = {
     val FcsDf: DataFrame = DataFrameRepository(FCS_DATAUID)
       .filter(col("case_type"))

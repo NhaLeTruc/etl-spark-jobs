@@ -4,14 +4,6 @@ Spark Applications for ETLs
 
 ## Getting Started
 
-To install the Git hook run the following in the root folder of this repo:
-
-```bash
-make init
-```
-
-## Set up your local environment
-
 ### Pre-requisites
 
 - Install IntelliJ Community Edition.

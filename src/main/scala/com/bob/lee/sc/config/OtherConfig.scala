@@ -1,6 +1,6 @@
 package com.bob.lee.sc.config
 
-import com.bob.lee.odyssey.calypso.datarepository.DataUID
+import com.bob.lee.etl.sparkbase.datarepository.DataUID
 
 case class OracleDataStoreConfig(
                                 dataUID: DataUID,

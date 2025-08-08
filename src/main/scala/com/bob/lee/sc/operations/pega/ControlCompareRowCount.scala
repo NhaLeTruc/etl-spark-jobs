@@ -1,18 +1,18 @@
 package com.bob.lee.sc.operations.pega
 
-import com.bob.lee.odyssey.calypso.datarepository.{DataRepositoryInitializer, DataUID}
-import com.bob.lee.odyssey.calypso.datarepository.impl.{DataFrameRepository, DataStoreRepository}
-import com.bob.lee.odyssey.calypso.config.{CalypsoCommandLineOptions, CalypsoConfigLoader, DataRepositoryConfig}
-import com.bob.lee.odyssey.calypso.operations.JobOperation
-import com.bob.lee.odyssey.calypso.spark.CalypsoSparkSession
+import com.bob.lee.etl.sparkbase.datarepository.{DataRepositoryInitializer, DataUID}
+import com.bob.lee.etl.sparkbase.datarepository.impl.{DataFrameRepository, DataStoreRepository}
+import com.bob.lee.etl.sparkbase.config.{sparkbaseCommandLineOptions, sparkbaseConfigLoader, DataRepositoryConfig}
+import com.bob.lee.etl.sparkbase.operations.JobOperation
+import com.bob.lee.etl.sparkbase.spark.sparkbaseSparkSession
 import com.bob.lee.sc.config.OracleDataStoreConfig
 import com.bob.lee.sc.datarepository.impl.XmlDataRepositoryInitializer
 
 class ControlCompareRowCount (
                              parquetDataUID: DataUID,
                              oracleData: OracleDataStoreConfig,
-                             calypsoCommandLineOptions: CalypsoCommandLineOptions
-                             ) extends JobOperation with LazyLogging with CalypsoSparkSession {
+                             sparkbaseCommandLineOptions: sparkbaseCommandLineOptions
+                             ) extends JobOperation with LazyLogging with sparkbaseSparkSession {
   override def execute: Unit = {
 
     val oracleMap = Map (
@@ -30,10 +30,10 @@ class ControlCompareRowCount (
 
     val oracleDFCount = oracleDF.first().getDecimal(0).longValue()
 
-    lazy val otherConfig = CalypsoConfigLoader("data-repository-config", calypsoCommandLineOptions.configFile.get)
+    lazy val otherConfig = sparkbaseConfigLoader("data-repository-config", sparkbaseCommandLineOptions.configFile.get)
       .loadOrThrow[OracleDataStoreConfig]
 
-    DataRepositoryInitializer(Option(otherConfig), calypsoCommandLineOptions.runDate)
+    DataRepositoryInitializer(Option(otherConfig), sparkbaseCommandLineOptions.runDate)
 
     val parquetDFCount = DataStoreRepository(parquetDataUID).read.count()
 
@@ -51,6 +51,6 @@ class ControlCompareRowCount (
 }
 
 object ControlCompareRowCount {
-  def apply(parquetDataUID: DataUID, oracleData: OracleDataStoreConfig, calypsoCommandLineOptions: CalypsoCommandLineOptions): ControlCompareRowCount =
-    new ControlCompareRowCount(parquetDataUID, oracleData, calypsoCommandLineOptions)
+  def apply(parquetDataUID: DataUID, oracleData: OracleDataStoreConfig, sparkbaseCommandLineOptions: sparkbaseCommandLineOptions): ControlCompareRowCount =
+    new ControlCompareRowCount(parquetDataUID, oracleData, sparkbaseCommandLineOptions)
 }

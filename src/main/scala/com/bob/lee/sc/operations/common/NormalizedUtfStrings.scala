@@ -1,8 +1,8 @@
 package com.bob.lee.sc.operations.common
 
-import com.bob.lee.odyssey.calypso.datarepository.DataUID
-import com.bob.lee.odyssey.calypso.datarepository.impl.DataFrameRepository
-import com.bob.lee.odyssey.calypso.operations.JobOperation
+import com.bob.lee.etl.sparkbase.datarepository.DataUID
+import com.bob.lee.etl.sparkbase.datarepository.impl.DataFrameRepository
+import com.bob.lee.etl.sparkbase.operations.JobOperation
 import com.typesfe.scalalogging.LazyLogging
 import org.apache.spark.sql.functions._
 
