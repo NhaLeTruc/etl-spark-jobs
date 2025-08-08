@@ -18,7 +18,7 @@ class OracleCountsReaderDataStore(
                                  dbPassword: String,
                                  schemaName: String,
                                  tableName: String
-                                 ) extends EmptyDataStore with CalypsoSparkSession with LazyLogging {
+                                 ) extends EmptyDataStore with sparkbaseSparkSession with LazyLogging {
   /**
    * This function configures settings for the OracleConnection
    *
