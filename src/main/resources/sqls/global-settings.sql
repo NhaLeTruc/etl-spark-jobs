@@ -1,0 +1,1 @@
+SELECT TO_DATE('01-01-2020', 'dd-mm-yyyy') AS snapshot_date, 2020 AS snapshot_year

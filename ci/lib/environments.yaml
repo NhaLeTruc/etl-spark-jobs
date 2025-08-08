@@ -1,0 +1,8 @@
+prod:
+  TARGET_DEPLOYMENT_PATH: /opt/sas/kyc-sc
+  TARGET_SERVER_NAME: kxbdp01acn01.oes.esp.aur.national.com.au
+  TARGET_SERVICE_ACCOUNT: srv-lasrbda-p
+non-prod:
+  TARGET_DEPLOYMENT_PATH: /opt/sas/kyc-sc
+  TARGET_SERVER_NAME: dpbdt01acn01.oes.esptest.aurtest.national.com.au
+  TARGET_SERVICE_ACCOUNT: srv-lasrbda-st
