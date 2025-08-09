@@ -1,0 +1,38 @@
+FROM bitnami/spark:3.5.6-debian-12-r0
+
+USER root
+
+ENV JUPYTER_HOME=/opt/bitnami/jupyter
+ENV JUPYTER_CONFIG_DIR=${JUPYTER_HOME}/config
+ENV JUPYTER_PATH=${JUPYTER_HOME}/data
+ENV JUPYTER_RUNTIME_DIR=${JUPYTER_HOME}/runtime
+
+RUN curl -L https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-3.5_2.12/1.4.3/iceberg-spark-runtime-3.5_2.12-1.4.3.jar -O --output-dir /opt/bitnami/spark/jars/ &&\
+    curl -L https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-aws-bundle/1.4.3/iceberg-aws-bundle-1.4.3.jar  -O --output-dir /opt/bitnami/spark/jars/ &&\
+    curl -L https://repo1.maven.org/maven2/org/projectnessie/nessie-integrations/nessie-spark-extensions-3.5_2.12/0.78.0/nessie-spark-extensions-3.5_2.12-0.78.0.jar -O --output-dir /opt/bitnami/spark/jars/ &&\
+    curl -L https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.7/postgresql-42.7.7.jar -O --output-dir /opt/bitnami/spark/jars/
+
+WORKDIR ${JUPYTER_HOME}
+
+COPY ./jupyter/requirements.txt ./requirements.txt
+RUN apt update && apt install tar git nano -y \
+    && pip install -r requirements.txt
+
+RUN jupyter toree install \
+    --interpreters=Scala,PySpark,SparkR,SQL \
+    --spark_home=/opt/bitnami/spark/ \
+    --spark_opts='--master=local[*]' 
+
+RUN adduser defaultuser \
+    && usermod -u 1000 --gid 0 defaultuser \
+    && chown -R defaultuser:defaultuser /tmp /.* /opt/bitnami \
+    && chmod -R 775 /tmp /.* /opt/bitnami
+
+USER defaultuser
+WORKDIR ${JUPYTER_HOME}/notebooks
+
+EXPOSE 8888
+EXPOSE 8080
+EXPOSE 8081
+EXPOSE 7077
+EXPOSE 18080

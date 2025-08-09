@@ -1,0 +1,30 @@
+# Environments
+*.env
+*.DS_Store
+
+# Docker
+superset_data/
+mariadb-data/
+minio-data/
+
+# Logs
+airflow/logs
+spark/logs
+**/*.log
+
+# Data
+**/*.parquet
+**/*.csv
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints
+
+# Jupyter
+.Trash*
+# **/*.ipynb
+
+# VSCode
+.vscode
+hooks/
