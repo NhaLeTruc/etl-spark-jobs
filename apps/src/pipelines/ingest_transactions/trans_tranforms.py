@@ -1,21 +1,15 @@
 # Externals
 from datetime import datetime
+from typing import Tuple
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, concat, lit, sha2, struct
 
 # Internals
 from core.conf.jdbc import get_postgres_env
-from core.mapping.OLTP_to_OLAP import dwh_to_cap_mappings
+from core.mappings.OLTP_to_OLAP import dwh_to_cap_mappings
 from core.sources.postgres_ops import read_pg
-from core.sources.minio_lake import read_minio
-from core.utils import read_file, replace_str_incol
-
-
-def dqcheck_bronze_transactions() -> tuple:
-    """
-    Perform data quality checks on landed postgres ops transactions.
-    """
-    return (False, [])
+from core.sources.minio_lake import fetch_minio
+from core.utils import read_file
 
 
 def extracts_bronze_transactions(
@@ -55,6 +49,15 @@ def extracts_bronze_transactions(
     )
 
 
+def dqcheck_bronze_transactions(
+    df: DataFrame,
+    mappings: list={},
+) -> Tuple[bool, DataFrame]:
+    """
+    Perform data quality checks on landed postgres ops transactions.
+    """
+    return (False, [])
+
 
 def transforms_silver_transactions(
     path: str,
@@ -78,9 +81,3 @@ def transforms_gold_transactions(
     """
 
     return
-
-
-def loads_postgres_kyc() -> None:
-    """
-    Loads data into postgres_kyc
-    """

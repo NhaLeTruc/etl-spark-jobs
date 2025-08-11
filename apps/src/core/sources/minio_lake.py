@@ -10,6 +10,7 @@ from pyspark.sql.types import StructType
 
 # Internals
 from core.utils import get_or_create_spark_session
+from core.constants import StorageFormats
 
 def get_minio_endpoint() -> str:
     """
@@ -25,7 +26,22 @@ def fetch_minio() -> DataFrame:
     """
 
 
-def persist_minio() -> None:
+def persist_minio(
+    df: DataFrame,
+    path: str,
+    partition_cols: str,
+    format_type: StorageFormats,
+    mode: str = "overwrite",
+    options: dict = {},
+) -> None:
     """
-    
+    Land data as Spark DataFrame in minio-lake bucket in path
+
+    Args:
+        df: Spark DataFrame to be landed.
+        path: string of minio-lake landing bucket path.
+        format_type: landed file type specificiation.
+        mode: landed file writing mode (append; overwrite)
+        options: Being explicit about overwriting only the required partitions
     """
+    return
