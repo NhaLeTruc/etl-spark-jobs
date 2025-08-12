@@ -30,7 +30,7 @@ def persist_minio(
     options: dict = {},
 ) -> None:
     """
-    Land data as Spark DataFrame in minio-lake bucket in path
+    Land Spark DataFrame in minio-lake bucket path
 
     Args:
         df: Spark DataFrame to be landed.
@@ -45,14 +45,14 @@ def persist_minio(
     writer.format(format_type).mode(mode).options(**options).save(path)
 
 
-def read_minio(
+def fetch_minio(
     path: str,
     sql: Optional[str] = None,
     table_name: str = "MINIO",
     format_type: StorageFormats = StorageFormats.MINIO_STORAGE_FORMAT,
 ) -> DataFrame:
     """
-    Read data as Spark DataFrame in minio-lake bucket in path
+    Read data in minio-lake bucket path as a Spark DataFrame
 
     Args:
         path: string of minio-lake bucket path.
