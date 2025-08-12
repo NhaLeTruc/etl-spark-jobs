@@ -3,13 +3,11 @@ main file of pipeline object "ingest_transactions"
 """
 # Externals
 from datetime import timedelta
-from pyspark.sql.functions import col, lit, struct, to_json
 
 # Internals
-from core.conf.storage import MINIO_DATA_PATH
 from core.constants import DateTimeFormat
 from core.pipeline import BaseDataPipeline
-from core.sources.minio_lake import persist_minio
+from core.connectors.minio_lake import persist_minio
 from apps.src.core.mappings.ingest_transactions_dqc import (
     bronze_dqc_json,
     silver_dqc_json,
