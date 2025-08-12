@@ -6,7 +6,7 @@ from pyspark.sql.functions import col, concat, lit, sha2, struct
 
 # Internals
 from core.conf.jdbc import get_postgres_env
-from core.mappings.oltp_to_olap import dwh_to_cap_mappings
+from apps.src.core.mappings.oltp_to_olap_labels import dwh_to_cap_mappings
 from core.sources.postgres_ops import read_pg
 from core.sources.minio_lake import fetch_minio
 from core.utils import read_file
