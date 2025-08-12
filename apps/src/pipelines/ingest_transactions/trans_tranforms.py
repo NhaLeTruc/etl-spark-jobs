@@ -6,7 +6,7 @@ from pyspark.sql.functions import col, concat, lit, sha2, struct
 
 # Internals
 from core.conf.jdbc import get_postgres_env
-from core.mappings.OLTP_to_OLAP import dwh_to_cap_mappings
+from core.mappings.oltp_to_olap import dwh_to_cap_mappings
 from core.sources.postgres_ops import read_pg
 from core.sources.minio_lake import fetch_minio
 from core.utils import read_file
@@ -49,7 +49,7 @@ def extracts_bronze_transactions(
     )
 
 
-def dqcheck_bronze_transactions(
+def dqcheck_bronze_subsets(
     df: DataFrame,
     mappings: list={},
 ) -> Tuple[bool, DataFrame]:
@@ -71,6 +71,16 @@ def transforms_silver_transactions(
     return
 
 
+def dqcheck_silver_subsets(
+    df: DataFrame,
+    mappings: list={},
+) -> Tuple[bool, DataFrame]:
+    """
+    Perform data quality checks on landed postgres ops transactions.
+    """
+    return (False, [])
+
+
 def transforms_gold_transactions(
     path: str,
     from_dt: str,
@@ -81,3 +91,13 @@ def transforms_gold_transactions(
     """
 
     return
+
+
+def dqcheck_gold_subsets(
+    df: DataFrame,
+    mappings: list={},
+) -> Tuple[bool, DataFrame]:
+    """
+    Perform data quality checks on landed postgres ops transactions.
+    """
+    return (False, [])

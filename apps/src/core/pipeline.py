@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Tuple
 from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql.functions import lit
 
 # Internals
 from core.constants import DateTimeFormat
@@ -54,16 +55,37 @@ class BaseDataPipeline(ABC):
     def enforced_dqc_checks(
         self,
         df: DataFrame,
+        as_of_date: str,
         mappings: list={},
     ) -> Tuple[bool, DataFrame]:
         """
-        
+        Perform highly reccommended data quality tests
+        Return a quality check boolean flag and a Spark DataFrame report
+        Report items:
+            Measurement, Table, Columns Unit, Upper, Lower, Measured, Remark, Note
+            No. of columns, tableA, All, Count,  10,  10,   10,     Pass,    Great
+            Unexpected values, tableA, columnB, Count, 0,  0,   1,   Failed,  Attention Required!
         """
-        self._df_shape_check(df,mappings)
-        self._df_size_check(df,mappings)
-        self._df_null_check(df,mappings)
-        self._df_keys_check(df,mappings)
-        self._df_values_check(df,mappings)
+        go_ahead = False
+        combined_reports = None
+        results = [ 
+            self._df_shape_check(df,mappings),
+            self._df_size_check(df,mappings),
+            self._df_null_check(df,mappings),
+            self._df_keys_check(df,mappings),
+            self._df_values_check(df,mappings),
+        ]
+
+        for flag, report in results:
+            go_ahead += flag
+            if combined_reports:
+                combined_reports = combined_reports.union(report)
+            else:
+                combined_reports = report
+        
+        combined_reports = combined_reports.withColumn("Report_Date", lit(self.as_of_date_fmt))
+
+        return go_ahead, combined_reports
 
 
     def _df_shape_check(
