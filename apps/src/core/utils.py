@@ -8,26 +8,24 @@ from typing import Any, Optional, Dict, List, Generator
 from pyspark.sql import SparkSession
 
 # Internals
-
+from core.conf.minio import OpsMinioConfig
 
 
 def get_or_create_spark_session(
     appname: str="etl_job",
     configs: dict={},
-    iceberg: bool=False,
 ) -> SparkSession:
     """
     Get or create SparkSesion with additional configs other than those in spark-defaults.conf
     """
     spark_builder = SparkSession.builder.appName(appname)
-
-    if iceberg:
-        MINIO_END_POINT = get_container_endpoint(conname="minio-lake", port="9000")
-        spark_builder = spark_builder.config(
-            {
-                'spark.sql.catalog.nessie.s3.endpoint': MINIO_END_POINT
-            }
-        )
+    
+    configs = configs | {
+        'spark.sql.catalog.nessie.s3.endpoint': OpsMinioConfig.endpoint,
+        'spark.hadoop.fs.s3a.endpoint': OpsMinioConfig.endpoint,
+        'spark.hadoop.fs.s3a.access.key': OpsMinioConfig.access_key,
+        'spark.hadoop.fs.s3a.secret.key': OpsMinioConfig.secret_key,
+    }
 
     for key, value in configs.items():
         spark_builder = spark_builder.config(key, value)
