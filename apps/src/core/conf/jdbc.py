@@ -6,6 +6,11 @@ JDBC config objects
 import os
 
 # Internals
+from core.utils import get_container_endpoint
+
+
+pg_container_name = "postgres"
+pg_container_port = "5432"
 
 
 class JdbcConfig:
@@ -63,7 +68,10 @@ class OpsJdbcConfig(JdbcConfig):
     
     @property
     def host(self):
-        return self.get_postgres_host()
+        return get_container_endpoint(
+            conname=pg_container_name,
+            port=pg_container_port,
+        )
 
 
     @property
@@ -86,9 +94,4 @@ class OpsJdbcConfig(JdbcConfig):
         return f"jdbc:postgresql://{self.get_postgres_host()}/{self.dbname}"
 
 
-    def get_postgres_host() -> str:
-        """
-        Get url address of postgres container in dev docker network
-        """
-        CMD = "curl -v postgres:5432 2>&1 | grep -o '(.*).' | tr -d '() '"
-        return 'http://' + os.popen(CMD).read().replace('\n', '')  + ':5432'
+    

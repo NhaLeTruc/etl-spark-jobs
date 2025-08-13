@@ -7,7 +7,7 @@ from datetime import timedelta
 # Internals
 from core.constants import DateTimeFormat
 from core.pipeline import BaseDataPipeline
-from core.connectors.minio_lake import persist_minio
+from core.crud.minio_lake import minio_create
 from apps.src.core.mappings.ingest_transactions_dqc import (
     bronze_dqc_json,
     silver_dqc_json,
@@ -42,7 +42,7 @@ class BronzeIngestTransPipeline(BaseDataPipeline):
             num_partitions=10,
         )
         
-        persist_minio(df)
+        minio_create(df)
         
         self.enforced_dqc_checks(df,bronze_dqc_json)
 
@@ -68,7 +68,7 @@ class SilverIngestTransPipeline(BaseDataPipeline):
             num_partitions=10,
         )
         
-        persist_minio(df)
+        minio_create(df)
         
         self.enforced_dqc_checks(df,silver_dqc_json)
 
@@ -94,7 +94,7 @@ class GoldIngestTransPipeline(BaseDataPipeline):
             num_partitions=10,
         )
         
-        persist_minio(df)
+        minio_create(df)
         
         self.enforced_dqc_checks(df,gold_dqc_json)
 
