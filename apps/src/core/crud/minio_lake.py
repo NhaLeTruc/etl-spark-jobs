@@ -13,15 +13,8 @@ from pyspark.sql.types import StructType
 from core.utils import get_or_create_spark_session
 from core.constants import StorageFormats
 
-def get_minio_endpoint() -> str:
-    """
-    Get url address of MINIO s3 endpoint in dev docker network
-    """
-    CMD = "curl -v minio-lake:9000 2>&1 | grep -o '(.*).' | tr -d '() '"
-    return 'http://' + os.popen(CMD).read().replace('\n', '')  +':9000'
 
-
-def persist_minio(
+def minio_create(
     df: DataFrame,
     path: str,
     partition_cols: Optional[List[str]] = None,
@@ -45,7 +38,7 @@ def persist_minio(
     writer.format(format_type).mode(mode).options(**options).save(path)
 
 
-def fetch_minio(
+def minio_read(
     path: str,
     sql: Optional[str] = None,
     table_name: str = "MINIO",
