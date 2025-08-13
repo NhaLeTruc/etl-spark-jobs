@@ -10,14 +10,14 @@ from pyspark.sql import DataFrame
 
 # Internals
 from core.conf.jdbc import OpsJdbcConfig
-from core.utils import get_or_create_spark_session
+from core.utils import get_or_create_spark_session, read_file_content
 
 
 config = OpsJdbcConfig()
 
 
 def read_pg_ops(
-    sql_query: str,
+    sql_query_path: str,
     parallel: bool = False,
     partition_column: str = "CREATED_DATE",
     lower_bound: Optional[str] = None,
@@ -29,7 +29,7 @@ def read_pg_ops(
     Run sql_query through OPS postgres database optionally in parallel processes.
 
     Args:
-        sql_query: A custom SQL query to execute. Note that dbtable and query cannot be used simultaneously.
+        sql_query_path: Path to a custom READ ONLY SQL query file. Note that dbtable and query cannot be used simultaneously.
         parallel: bool = False,
         partition_column: The name of a numeric column to use for partitioning the data when reading in parallel. Requires lowerBound and upperBound to be specified.
         lower_bound: The lower bound of the partition_column for partitioning.
@@ -40,6 +40,8 @@ def read_pg_ops(
     Returns:
         A Spark DataFrame from querying the OPS database
     """
+    sql_query = read_file_content(sql_query_path)
+
     dbtable = f"({sql_query}) as mytable"
 
     jdbc_options = {

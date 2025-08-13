@@ -3,14 +3,11 @@ Repository for minio-lake related methods
 """
 
 # Externals
-import os
 from typing import List, Optional
 from pyspark.sql import DataFrame
-from pyspark.sql.functions import col
-from pyspark.sql.types import StructType
 
 # Internals
-from core.utils import get_or_create_spark_session
+from core.utils import get_or_create_spark_session, get_container_endpoint
 from core.constants import StorageFormats
 
 
@@ -56,7 +53,8 @@ def minio_read(
     Returns:
         minio-lake data as a Spark DataFrame
     """
-    spark = get_or_create_spark_session(stage_description=f"Reading minio-lake data in: {path}")
+    spark = get_or_create_spark_session(appname="Minio_read")
+
     if sql:
         spark.read.format(format_type).load(path).createOrReplaceTempView(table_name)
         return spark.sql(sql)
