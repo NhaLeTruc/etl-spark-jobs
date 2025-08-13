@@ -14,11 +14,20 @@ from pyspark.sql import SparkSession
 def get_or_create_spark_session(
     appname: str="etl_job",
     configs: dict={},
+    iceberg: bool=False,
 ) -> SparkSession:
     """
     Get or create SparkSesion with additional configs other than those in spark-defaults.conf
     """
     spark_builder = SparkSession.builder.appName(appname)
+
+    if iceberg:
+        MINIO_END_POINT = get_container_endpoint(conname="minio-lake", port="9000")
+        spark_builder = spark_builder.config(
+            {
+                'spark.sql.catalog.nessie.s3.endpoint': MINIO_END_POINT
+            }
+        )
 
     for key, value in configs.items():
         spark_builder = spark_builder.config(key, value)

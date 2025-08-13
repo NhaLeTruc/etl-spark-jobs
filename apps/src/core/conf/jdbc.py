@@ -8,7 +8,7 @@ import os
 # Internals
 from core.utils import get_container_endpoint
 
-
+# Variables
 pg_container_name = "postgres"
 pg_container_port = "5432"
 
@@ -91,7 +91,7 @@ class OpsJdbcConfig(JdbcConfig):
 
     @property
     def url(self):
-        return f"jdbc:postgresql://{self.get_postgres_host()}/{self.dbname}"
+        return f"jdbc:postgresql://{self.host}/{self.dbname}"
 
 
     
