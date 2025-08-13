@@ -29,8 +29,8 @@ services:
       mc alias set myminio http://localhost:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
       mc admin accesskey create myminio/ --access-key ${MINIO_ACCESS_KEY} --secret-key ${MINIO_SECRET_KEY} --description 'Access key for docker environment';
       mc mb myminio/dummy;
-      mc mb myminio/datalake;
-      mc mb myminio/datalakehouse;
+      mc mb myminio/lake;
+      mc mb myminio/lakehouse;
       mc mb myminio/warehouse;
       tail -f /dev/null"
     networks:
