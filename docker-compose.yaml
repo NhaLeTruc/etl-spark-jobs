@@ -73,7 +73,7 @@ services:
     volumes:
       - ./spark/conf/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
       - ./spark/logs:/tmp/spark-events
-      - ./apps:/opt/bitnami/spark/apps
+      - ./spark/apps:/opt/bitnami/spark/apps
       - ./spark/jupyter/notebooks:/opt/bitnami/jupyter/notebooks
     entrypoint: >
       /bin/bash -c "

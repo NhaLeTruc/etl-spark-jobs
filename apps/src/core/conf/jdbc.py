@@ -8,10 +8,6 @@ import os
 # Internals
 from core.utils import get_container_endpoint
 
-# Variables
-pg_container_name = "postgres"
-pg_container_port = "5432"
-
 
 class JdbcConfig:
     """
@@ -62,15 +58,20 @@ class OpsJdbcConfig(JdbcConfig):
     """
     JDBC configurations specifically for connecting to OPS
     """
-    def __init__(self):
+    def __init__(
+        self, 
+        host_name: str,
+        host_port: str,
+    ):
         super().__init__()
-
+        self.host_name = host_name
+        self.host_port = host_port
     
     @property
     def host(self):
         return get_container_endpoint(
-            conname=pg_container_name,
-            port=pg_container_port,
+            conname=self.host_name,
+            port=self.host_port,
         )
 
 

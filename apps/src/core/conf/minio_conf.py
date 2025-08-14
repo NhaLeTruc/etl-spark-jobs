@@ -8,10 +8,6 @@ import os
 # Internals
 from core.utils import get_container_endpoint
 
-# Variables
-minio_container_name = "minio-lake"
-minio_container_port = "9000"
-
 
 class MinioConfig:
     """
@@ -44,17 +40,23 @@ class MinioConfig:
 
 class OpsMinioConfig(MinioConfig):
     """
-    minio configurations specifically for connecting to OPS
+    configurations specifically for connecting to OPS's minio-lake
     """
-    def __init__(self):
+    def __init__(
+        self,
+        minio_host: str,
+        minio_port: str,
+    ):
         super().__init__()
+        self.minio_host = minio_host
+        self.minio_port = minio_port
 
     
     @property
     def endpoint(self):
         return get_container_endpoint(
-            conname=minio_container_name,
-            port=minio_container_port,
+            conname=self.minio_host,
+            port=self.minio_port,
         )
 
 

@@ -10,10 +10,16 @@ from pyspark.sql import DataFrame
 
 # Internals
 from core.conf.jdbc import OpsJdbcConfig
+from core.conf.storage import DOCKER_ENV
 from core.utils import get_or_create_spark_session, read_file_content
 
-
-config = OpsJdbcConfig()
+# OpsJdbcConfig instantiation
+pg_ops_host = DOCKER_ENV['postgres']['container_name']
+pg_ops_port = DOCKER_ENV['postgres']['container_port']
+config = OpsJdbcConfig(
+    host_name=pg_ops_host,
+    host_port=pg_ops_port,
+)
 
 
 def read_pg_ops(
@@ -32,8 +38,8 @@ def read_pg_ops(
         sql_query_path: Path to a custom READ ONLY SQL query file. Note that dbtable and query cannot be used simultaneously.
         parallel: bool = False,
         partition_column: The name of a numeric column to use for partitioning the data when reading in parallel. Requires lowerBound and upperBound to be specified.
-        lower_bound: The lower bound of the partition_column for partitioning.
-        upper_bound: The upper bound of the partition_column for partitioning.
+        lower_bound: The lower bound of the partition_column for partitioning. Used only for defining the partitioning strategy and not for filtering the rows.
+        upper_bound: The upper bound of the partition_column for partitioning. Used only for defining the partitioning strategy and not for filtering the rows.
         num_partitions:  The maximum number of partitions to use for parallel reading. This determines the maximum number of concurrent JDBC connections.
         fetch_size: The number of rows to fetch from the database at a time.
 
@@ -46,6 +52,8 @@ def read_pg_ops(
 
     jdbc_options = {
         "url": config.url,
+        "user": config.user,
+        "password": config.password,
         "driver": "org.postgresql:postgresql:42.7.7",
         "dbtable": dbtable,
         "fetchsize": fetch_size

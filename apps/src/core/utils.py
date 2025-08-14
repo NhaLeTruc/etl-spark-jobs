@@ -8,7 +8,8 @@ from typing import Any, Optional, Dict, List, Generator
 from pyspark.sql import SparkSession
 
 # Internals
-from core.conf.minio import OpsMinioConfig
+from apps.src.core.conf.minio_conf import OpsMinioConfig
+from core.conf.storage import DOCKER_ENV
 
 
 def get_or_create_spark_session(
@@ -19,12 +20,20 @@ def get_or_create_spark_session(
     Get or create SparkSesion with additional configs other than those in spark-defaults.conf
     """
     spark_builder = SparkSession.builder.appName(appname)
-    
+
+    # OpsMinioConfig instantiation
+    minio_host = DOCKER_ENV['minio-lake']['container_name']
+    minio_port = DOCKER_ENV['minio-lake']['container_port']
+    minio_conf = OpsMinioConfig(
+        host_name=minio_host,
+        host_port=minio_port,
+    )
+        
     configs = configs | {
-        'spark.sql.catalog.nessie.s3.endpoint': OpsMinioConfig.endpoint,
-        'spark.hadoop.fs.s3a.endpoint': OpsMinioConfig.endpoint,
-        'spark.hadoop.fs.s3a.access.key': OpsMinioConfig.access_key,
-        'spark.hadoop.fs.s3a.secret.key': OpsMinioConfig.secret_key,
+        'spark.sql.catalog.nessie.s3.endpoint': minio_conf.endpoint,
+        'spark.hadoop.fs.s3a.endpoint': minio_conf.endpoint,
+        'spark.hadoop.fs.s3a.access.key': minio_conf.access_key,
+        'spark.hadoop.fs.s3a.secret.key': minio_conf.secret_key,
     }
 
     for key, value in configs.items():

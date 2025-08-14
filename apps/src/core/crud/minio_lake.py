@@ -7,7 +7,7 @@ from typing import List, Optional
 from pyspark.sql import DataFrame
 
 # Internals
-from core.utils import get_or_create_spark_session, get_container_endpoint
+from core.utils import get_or_create_spark_session
 from core.constants import StorageFormats
 
 

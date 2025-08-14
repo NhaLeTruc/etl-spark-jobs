@@ -8,7 +8,7 @@ from core.conf.jdbc import get_postgres_env
 from core.crud.postgres_ops import read_pg_ops
 from core.crud.minio_lake import minio_read
 from core.mappings.oltp_to_olap_labels import dwh_to_cap_mappings
-from core.utils import read_file
+from core.utils import read_file_content
 
 
 def extracts_bronze_transactions(
@@ -33,11 +33,11 @@ def extracts_bronze_transactions(
     Returns:
         Spark DataFrame of Postgres OPS transaction data
     """
-    sql_query = read_file(
+    sql_query = read_file_content(
         "sources/sql/trans_extracts.sql"
     ).format(schema=get_postgres_env().schema, from_dt=from_dt, to_dt=to_dt)
 
-    return read_pg(
+    return read_pg_ops(
         sql_query,
         parallel=parallel,
         partition_column=partition_column,
