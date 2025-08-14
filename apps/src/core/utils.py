@@ -15,6 +15,7 @@ from core.conf.storage import DOCKER_ENV
 def get_or_create_spark_session(
     appname: str="etl_job",
     configs: dict={},
+    stage_description: Optional[str]=None,
 ) -> SparkSession:
     """
     Get or create SparkSesion with additional configs other than those in spark-defaults.conf
@@ -41,6 +42,8 @@ def get_or_create_spark_session(
 
     session = spark_builder.getOrCreate()
 
+    if stage_description:
+        session.sparkContext.setLocalProperty("callSite.short", stage_description)
     return session
 
 

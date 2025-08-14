@@ -11,19 +11,21 @@ from pyspark.sql import DataFrame
 # Internals
 from core.conf.jdbc import OpsJdbcConfig
 from core.conf.storage import DOCKER_ENV
-from core.utils import get_or_create_spark_session, read_file_content
+from core.utils import get_or_create_spark_session
 
 # OpsJdbcConfig instantiation
+# TODO: Where best to do this instantiation??
 pg_ops_host = DOCKER_ENV['postgres']['container_name']
 pg_ops_port = DOCKER_ENV['postgres']['container_port']
+pg_driver = DOCKER_ENV['postgres']['driver']
 config = OpsJdbcConfig(
     host_name=pg_ops_host,
     host_port=pg_ops_port,
 )
 
-
+# TODO: Should this be for all type of jdbc spark read?
 def read_pg_ops(
-    sql_query_path: str,
+    sql_query: str,
     parallel: bool = False,
     partition_column: str = "CREATED_DATE",
     lower_bound: Optional[str] = None,
@@ -46,15 +48,13 @@ def read_pg_ops(
     Returns:
         A Spark DataFrame from querying the OPS database
     """
-    sql_query = read_file_content(sql_query_path)
-
     dbtable = f"({sql_query}) as mytable"
 
     jdbc_options = {
         "url": config.url,
         "user": config.user,
         "password": config.password,
-        "driver": "org.postgresql:postgresql:42.7.7",
+        "driver": pg_driver,
         "dbtable": dbtable,
         "fetchsize": fetch_size
     }
@@ -81,7 +81,7 @@ def read_pg_ops(
     except Exception:
         caller_name = "func_not_found"
     spark = get_or_create_spark_session(
-        stage_description=f"Read OPS data: {caller_name}"
+        appname=f"Read OPS data: {caller_name}"
     )
     return spark.read.format("jdbc").options(**jdbc_options).load()
 
