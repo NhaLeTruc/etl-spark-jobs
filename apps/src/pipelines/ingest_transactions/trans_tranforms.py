@@ -34,8 +34,15 @@ def extracts_bronze_transactions(
         Spark DataFrame of Postgres OPS transaction data
     """
     sql_query = read_file_content(
-        "sources/sql/trans_extracts.sql"
-    ).format(schema=get_postgres_env().schema, from_dt=from_dt, to_dt=to_dt)
+        "crud/sql/trans_extracts.sql"
+    ).format(
+        schema=get_postgres_env().schema,
+        partition_column=partition_column, 
+        from_dt=from_dt, 
+        to_dt=to_dt
+    )
+
+    # TODO: calculate optimal partition_from_dt and filter_from_dt, so that first and last partition will not be skewed.
 
     return read_pg_ops(
         sql_query,
