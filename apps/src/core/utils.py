@@ -2,14 +2,16 @@
 Repository of reusable utility methods
 """
 # Externals
-import os, json, csv, re, sys, io
+import os, json
 from os.path import abspath, dirname, join
-from typing import Any, Optional, Dict, List, Generator
+from typing import Any, Optional, Dict, List
+from datetime import datetime, timedelta
 from pyspark.sql import SparkSession
 
 # Internals
 from apps.src.core.conf.minio_conf import OpsMinioConfig
-from core.conf.storage import DOCKER_ENV
+from apps.src.core.conf.storage import DOCKER_ENV
+from apps.src.core.constants import DateTimeFormat
 
 
 def get_or_create_spark_session(
@@ -52,7 +54,7 @@ def get_container_endpoint(conname: str, port: str) -> str:
     Get docker container url from docker dev environment network
     """
     CMD = f"curl -v {conname}:{port} 2>&1 | grep -o '(.*).' | tr -d '() '"
-    return f"http://{os.popen(CMD).read().replace('\n', '')}:{port}"
+    return "http://" + os.popen(CMD).read().replace('\n', '') + ":" + {port}
 
 
 def read_file_content(path: str) -> str:
@@ -83,3 +85,22 @@ def read_json_config(path: str) -> Any:
         JSON dictionary
     """
     return json.loads(read_file_content(path))
+
+
+def cal_partition_dt(
+    from_dt: str,
+    to_dt: str,
+    num_partitions: int,
+    date_format: str = DateTimeFormat.ISO_DATE_FMT.value
+) -> List[str]:
+    to_dt = datetime.strptime(to_dt, date_format)
+    from_dt = datetime.strptime(from_dt, date_format)
+
+    gap_days = to_dt - from_dt
+    parition_size = gap_days / num_partitions
+
+    partition_from_dt = (from_dt + timedelta(days=parition_size.days)).strftime(date_format)
+    partition_to_dt = (to_dt - timedelta(days=parition_size.days)).strftime(date_format)
+
+    return [partition_from_dt, partition_to_dt]
+

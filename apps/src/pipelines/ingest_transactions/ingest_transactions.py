@@ -5,10 +5,10 @@ main file of pipeline object "ingest_transactions"
 from datetime import timedelta
 
 # Internals
-from core.constants import DateTimeFormat
-from core.pipeline import BaseDataPipeline
-from core.crud.minio_lake import minio_create
-from apps.src.core.mappings.ingest_transactions_dqc import (
+from constants import DateTimeFormat
+from pipeline import BaseDataPipeline
+from crud.minio_lake import minio_create
+from mappings.ingest_transactions_dqc import (
     bronze_dqc_json,
     silver_dqc_json,
     gold_dqc_json,

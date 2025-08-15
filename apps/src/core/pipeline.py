@@ -6,8 +6,8 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.functions import lit
 
 # Internals
-from core.constants import DateTimeFormat
-from core.utils import get_or_create_spark_session
+from constants import DateTimeFormat
+from utils import get_or_create_spark_session
 
 
 class BaseDataPipeline(ABC):

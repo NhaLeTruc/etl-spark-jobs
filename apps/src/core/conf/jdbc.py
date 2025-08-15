@@ -6,7 +6,7 @@ JDBC config objects
 import os
 
 # Internals
-from core.utils import get_container_endpoint
+# from utils import get_container_endpoint
 
 
 class JdbcConfig:
@@ -69,10 +69,11 @@ class OpsJdbcConfig(JdbcConfig):
     
     @property
     def host(self):
-        return get_container_endpoint(
-            conname=self.host_name,
-            port=self.host_port,
-        )
+        return "http://test.com"
+        # return get_container_endpoint(
+        #     conname=self.host_name,
+        #     port=self.host_port,
+        # )
 
 
     @property
