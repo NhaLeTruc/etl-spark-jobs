@@ -7,7 +7,7 @@ from pyspark.sql.functions import col, concat, lit, sha2, struct
 from apps.src.core.crud.postgres_ops import read_pg_ops
 from apps.src.core.crud.minio_lake import minio_read
 from apps.src.core.mappings.oltp_to_olap_labels import dwh_to_cap_mappings
-from apps.src.core.utils import read_file_content
+from apps.src.core.utils import read_file_content, cal_partition_dt
 
 
 def extracts_bronze_transactions(
@@ -40,14 +40,18 @@ def extracts_bronze_transactions(
         to_dt=to_dt
     )
 
-    # TODO: calculate optimal partition_from_dt and filter_from_dt, so that first and last partition will not be skewed.
+    partition_dt = cal_partition_dt(
+        from_dt=from_dt,
+        to_dt=to_dt,
+        num_partitions=num_partitions,
+    )
 
     return read_pg_ops(
         sql_query,
         parallel=parallel,
         partition_column=partition_column,
-        lower_bound=from_dt,
-        upper_bound=to_dt,
+        lower_bound=partition_dt[0],
+        upper_bound=partition_dt[1],
         num_partitions=num_partitions,
         fetch_size=fetch_size,
     )

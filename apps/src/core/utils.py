@@ -93,6 +93,17 @@ def cal_partition_dt(
     num_partitions: int,
     date_format: str = DateTimeFormat.ISO_DATE_FMT.value
 ) -> List[str]:
+    """
+    Suggest partition dates for Spark parallel operations.
+
+    Args:
+        from_dt: filter date base on business need.
+        to_dt: filter date base on business nedd.
+        num_partitions: number of desired Spark parallel operations.
+        data_format: IO date format as string.
+    Return:
+        List of two partition dates: [partition_from_dt, partition_to_dt]
+    """
     to_dt = datetime.strptime(to_dt, date_format)
     from_dt = datetime.strptime(from_dt, date_format)
 

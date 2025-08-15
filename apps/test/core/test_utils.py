@@ -10,7 +10,6 @@ from apps.src.core.utils import cal_partition_dt
 
 class testCalPartitionDt(unittest.TestCase):
 
-
     def test_cal_partition_dt(self):
         self.assertEqual(
             cal_partition_dt(

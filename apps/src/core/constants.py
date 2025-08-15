@@ -1,6 +1,9 @@
-# Unlikely to change values
-
+"""
+Unlikely to change values
+"""
+# Externals
 from enum import Enum, unique
+
 
 class DateTimeFormat(Enum):
     """

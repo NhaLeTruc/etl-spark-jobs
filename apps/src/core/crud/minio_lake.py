@@ -7,8 +7,8 @@ from typing import List, Optional
 from pyspark.sql import DataFrame
 
 # Internals
-from utils import get_or_create_spark_session
-from constants import StorageFormats
+from apps.src.core.utils import get_or_create_spark_session
+from apps.src.core.constants import StorageFormats
 
 
 def minio_create(
