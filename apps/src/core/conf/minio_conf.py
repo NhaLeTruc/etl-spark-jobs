@@ -6,7 +6,7 @@ minio config objects
 import os
 
 # Internals
-from core.utils import get_container_endpoint
+# from apps.src.core.utils import get_container_endpoint
 
 
 class MinioConfig:
@@ -54,10 +54,11 @@ class OpsMinioConfig(MinioConfig):
     
     @property
     def endpoint(self):
-        return get_container_endpoint(
-            conname=self.minio_host,
-            port=self.minio_port,
-        )
+        return "http://test.com"
+        # return get_container_endpoint(
+        #     conname=self.minio_host,
+        #     port=self.minio_port,
+        # )
 
 
     @property

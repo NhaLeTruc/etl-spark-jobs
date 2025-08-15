@@ -6,7 +6,7 @@ import inspect
 from typing import Optional
 
 # Internals
-from core.utils import get_or_create_spark_session
+from utils import get_or_create_spark_session
 
 
 class LoggerProvider:

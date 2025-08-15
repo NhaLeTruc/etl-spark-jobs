@@ -11,5 +11,3 @@ WTF_CSRF_TIME_LIMIT = None
 ENABLE_PROXY_FIX = True
 
 WEBDRIVER_BASEURL = "http://localhost:8088/" 
-
-# TODO: Add master user authentication

@@ -19,6 +19,7 @@ spark/logs
 
 # Python
 __pycache__/
+__init__.py
 *.pyc
 .ipynb_checkpoints
 
