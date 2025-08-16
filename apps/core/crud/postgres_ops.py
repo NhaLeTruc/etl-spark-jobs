@@ -9,9 +9,9 @@ from typing import Optional
 from pyspark.sql import DataFrame
 
 # Internals
-from apps.src.core.conf.jdbc import OpsJdbcConfig
-from apps.src.core.conf.storage import DOCKER_ENV
-from apps.src.core.utils import get_or_create_spark_session
+from apps.core.conf.jdbc import OpsJdbcConfig
+from apps.core.conf.storage import DOCKER_ENV
+from apps.core.utils import get_or_create_spark_session
 
 # OpsJdbcConfig instantiation
 # TODO: Where best to do this instantiation??

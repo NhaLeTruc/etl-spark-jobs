@@ -9,9 +9,9 @@ from datetime import datetime, timedelta
 from pyspark.sql import SparkSession
 
 # Internals
-from apps.src.core.conf.minio_conf import OpsMinioConfig
-from apps.src.core.conf.storage import DOCKER_ENV
-from apps.src.core.constants import DateTimeFormat
+from apps.core.conf.minio_conf import OpsMinioConfig
+from apps.core.conf.storage import DOCKER_ENV
+from apps.core.constants import DateTimeFormat
 
 
 def get_or_create_spark_session(
