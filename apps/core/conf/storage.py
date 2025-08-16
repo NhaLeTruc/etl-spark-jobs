@@ -1,5 +1,5 @@
 """
-
+Storage facts
 """
 
 MINIO_BUCKETS = {

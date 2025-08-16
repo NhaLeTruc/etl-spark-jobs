@@ -4,10 +4,10 @@ from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, concat, lit, sha2, struct
 
 # Internals
-from apps.src.core.crud.postgres_ops import read_pg_ops
-from apps.src.core.crud.minio_lake import minio_read
-from apps.src.core.mappings.oltp_to_olap_labels import dwh_to_cap_mappings
-from apps.src.core.utils import read_file_content, cal_partition_dt
+from apps.core.crud.postgres_ops import read_pg_ops
+from apps.core.crud.minio_lake import minio_read
+from apps.core.mappings.oltp_to_olap_labels import dwh_to_cap_mappings
+from apps.core.utils import read_file_content, cal_partition_dt
 
 
 def extracts_bronze_transactions(

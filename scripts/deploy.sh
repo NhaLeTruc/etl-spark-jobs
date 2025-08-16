@@ -1,9 +1,9 @@
 #!/bin/bash
 
-cd src
+cd apps
 
-zip -FSr      ops-core.zip       core -x *.pyc
+zip -FSr           ops-zip       core -x *.pyc
 zip -FSr ops-pipelines.zip  pipelines -x *.pyc
 
-mv      ops-core.zip spark/apps/
+mv           ops-zip spark/apps/
 mv ops-pipelines.zip spark/apps/
