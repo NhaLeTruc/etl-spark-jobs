@@ -4,6 +4,7 @@ pyspark postgres db connector
 
 # Externals
 import inspect
+import traceback
 from datetime import datetime
 from typing import Optional
 from pyspark.sql import DataFrame
@@ -86,3 +87,29 @@ def read_pg_ops(
     return spark.read.format("jdbc").options(**jdbc_options).load()
 
 
+def write_pg_ops(
+    dbtable: str,
+    df: DataFrame,
+    mode: str = "append",
+) -> None:
+    """
+    Write data to postgres OPS
+
+    Args:
+        dbtable: name of table to be appended (default) in postgres OPS.
+        df: Spark Dataframe whose data would append (default) dbtable.
+    """
+
+    jdbc_options = {
+        "url": config.url,
+        "user": config.user,
+        "password": config.password,
+        "driver": pg_driver,
+        "dbtable": dbtable,
+    }
+
+    try:
+        df.write.format("jdbc").options(**jdbc_options).mode(mode).save()
+    except Exception as e:
+        print("An error occurred:", e)
+        traceback.print_exc()

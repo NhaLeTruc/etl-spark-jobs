@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from pyspark.sql import SparkSession
 
 # Internals
-from apps.core.conf.minio_conf import OpsMinioConfig
+from apps.core.conf.minio_config import OpsMinioConfig
 from apps.core.conf.storage import DOCKER_ENV
 from apps.core.constants import DateTimeFormat
 
@@ -86,7 +86,7 @@ def read_json_config(path: str) -> Any:
     """
     return json.loads(read_file_content(path))
 
-
+# TODO: handle 1 day load, wrong inputs
 def cal_partition_dt(
     from_dt: str,
     to_dt: str,
