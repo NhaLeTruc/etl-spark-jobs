@@ -16,6 +16,9 @@ DOCKER_ENV = {
     "postgres": {
         "container_name": "postgres",
         "container_port": "5432",
+        "user_var": "POSTGRES_USER",
+        "pass_var": "POSTGRES_PASSWORD",
+        "db_var": "POSTGRES_DB",
         "driver": "org.postgresql:postgresql:42.7.7"
     },
     "minio-lake": {

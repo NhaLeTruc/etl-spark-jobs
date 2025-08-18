@@ -4,6 +4,7 @@ JDBC config objects
 
 # Externals
 import os
+from typing import Dict
 
 
 class JdbcConfig:
@@ -50,19 +51,25 @@ class JdbcConfig:
         """
         raise NotImplementedError()
     
+    @property
+    def driver(self) -> str:
+        """
+        JDBC driver
+        """
+        raise NotImplementedError()
+    
 
-class OpsJdbcConfig(JdbcConfig):
+# TODO: implement vault for non-prod env
+class DockerEnvJdbcConfig(JdbcConfig):
     """
     JDBC configurations specifically for connecting to OPS
     """
     def __init__(
         self, 
-        host_name: str,
-        host_port: str,
+        config: Dict={}
     ):
         super().__init__()
-        self.host_name = host_name
-        self.host_port = host_port
+        self.config = config
     
     @property
     def host(self):
@@ -72,22 +79,27 @@ class OpsJdbcConfig(JdbcConfig):
 
     @property
     def user(self):
-        return os.getenv("POSTGRES_USER")
+        return os.getenv(self.config.get("user_var"))
     
 
     @property
     def password(self):
-        return os.getenv("POSTGRES_PASSWORD")
+        return os.getenv(self.config.get("pass_var"))
     
 
     @property
     def dbname(self):
-        return os.getenv("POSTGRES_DB")
+        return os.getenv(self.config.get("db_var"))
     
 
     @property
     def url(self):
         return f"jdbc:postgresql://{self.host}/{self.dbname}"
+    
+
+    @property
+    def driver(self) -> str:
+        return self.config.get("driver")
 
 
     
