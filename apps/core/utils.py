@@ -86,7 +86,7 @@ def read_json_config(path: str) -> Any:
     """
     return json.loads(read_file_content(path))
 
-# TODO: handle 1 day load, wrong inputs
+
 def cal_partition_dt(
     from_dt: str,
     to_dt: str,
@@ -106,12 +106,19 @@ def cal_partition_dt(
     """
     to_dt = datetime.strptime(to_dt, date_format)
     from_dt = datetime.strptime(from_dt, date_format)
-
+    
     gap_days = to_dt - from_dt
+    
     parition_size = gap_days / num_partitions
+
+    if parition_size.days < 1:
+        raise ValueError("num_partitions too large for date bounds!")
 
     partition_from_dt = (from_dt + timedelta(days=parition_size.days)).strftime(date_format)
     partition_to_dt = (to_dt - timedelta(days=parition_size.days)).strftime(date_format)
+
+    if partition_from_dt >= partition_to_dt:
+        raise ValueError("Cannot find valid partition dates!")
 
     return [partition_from_dt, partition_to_dt]
 
