@@ -10,6 +10,7 @@ from pyspark.sql import SparkSession
 
 # Internals
 from apps.core.conf.minio_config import OpsMinioConfig
+from apps.core.conf.jdbc import JdbcConfig, DockerEnvJdbcConfig
 from apps.core.conf.storage import DOCKER_ENV
 from apps.core.constants import DateTimeFormat
 
@@ -122,3 +123,13 @@ def cal_partition_dt(
 
     return [partition_from_dt, partition_to_dt]
 
+
+def get_jdbc_config(
+    container_name: str = "postgres"
+) -> JdbcConfig:
+
+    config = DockerEnvJdbcConfig(
+        DOCKER_ENV.get(container_name)
+    )
+
+    return config
