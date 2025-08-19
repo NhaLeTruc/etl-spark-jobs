@@ -6,13 +6,13 @@ import logging
 import unittest
 
 # Internals
-from apps.core.utils import cal_partition_dt
+from apps.core.utils import cal_partition_dt, read_core_file
 
 
 # Configure logging to console
 logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(name)s:%(message)s')
 
-class testCalPartitionDt(unittest.TestCase):
+class TestUtils(unittest.TestCase):
 
     def test_cal_partition_dt(self):
         logger = logging.getLogger(__name__)
@@ -73,6 +73,21 @@ class testCalPartitionDt(unittest.TestCase):
                 num_partitions=1
             )
         self.assertEqual(str(cm.exception), "Cannot find valid partition dates!")
+
+
+    def test_read_core_file(self):
+        logger = logging.getLogger(__name__)
+        logger.info("\n\n[UNITTEST].[Utils].[function] read_core_file [SUCCESS]")
+
+        self.assertEqual(
+            read_core_file("crud/sql/trans_extracts.sql").format(
+                table_name="abc",
+                partition_column="ccc",
+                from_dt="12314",
+                to_dt="31423"
+            ),
+            "SELECT * FROM abc WHERE ccc BETWEEN 12314 AND 31423"
+        )
 
 
 if __name__ == '__main__':

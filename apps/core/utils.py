@@ -45,15 +45,7 @@ def get_or_create_spark_session(
     return session
 
 
-def get_container_endpoint(conname: str, port: str) -> str:
-    """
-    Get docker container url from docker dev environment network
-    """
-    CMD = f"curl -v {conname}:{port} 2>&1 | grep -o '(.*).' | tr -d '() '"
-    return "http://" + os.popen(CMD).read().replace('\n', '') + ":" + {port}
-
-
-def read_file_content(path: str) -> str:
+def read_core_file(path: str) -> str:
     """
     Give a path relative to core module, read its content and return it.
 
@@ -67,20 +59,7 @@ def read_file_content(path: str) -> str:
     destination_path = join(current_path, path)
 
     with open(destination_path, encoding="utf-8-sig") as file:
-        return file.read()
-    
-
-def read_json_config(path: str) -> Any:
-    """
-    Read content of JSON file in path relative to core directory and return it.
-
-    Args:
-        path: path to file, relative to core directory.
-
-    Returns:
-        JSON dictionary
-    """
-    return json.loads(read_file_content(path))
+        return file.read().replace("\n", " ").rstrip()
 
 
 def cal_partition_dt(

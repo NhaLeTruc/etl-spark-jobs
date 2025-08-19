@@ -50,8 +50,8 @@ class DockerEnvMinioConfig(MinioConfig):
     
     @property
     def endpoint(self):
-        CMD = f"curl -v {self.config.get("container_name")}:{self.config.get("container_port")} 2>&1 | grep -o '(.*).' | tr -d '() '"
-        return "http://" + os.popen(CMD).read().replace('\n', '') + ":" + {self.config.get("container_port")}
+        CMD = "curl -v " + self.config.get('container_name') + ":" + self.config.get('container_port') + " 2>&1 | grep -o '(.*).' | tr -d '() '"
+        return "http://" + os.popen(CMD).read().replace('\n', '') + ":" + self.config.get("container_port")
 
 
     @property
