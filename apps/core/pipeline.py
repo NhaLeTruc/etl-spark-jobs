@@ -1,7 +1,7 @@
 # Externals
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Tuple
+from typing import Tuple, Dict
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.functions import lit
 
@@ -56,7 +56,7 @@ class BaseDataPipeline(ABC):
         self,
         df: DataFrame,
         as_of_date: str,
-        mappings: list={},
+        mappings: Dict={},
     ) -> Tuple[bool, DataFrame]:
         """
         Perform highly reccommended data quality tests
@@ -91,7 +91,7 @@ class BaseDataPipeline(ABC):
     def _df_shape_check(
         self,
         df: DataFrame,
-        mappings: list={},
+        mappings: Dict={},
     ) -> Tuple[bool, DataFrame]:
         """
         Check whether Spark DataFrame is of the right shape i.e. correct composite of columns.
@@ -103,7 +103,7 @@ class BaseDataPipeline(ABC):
     def _df_size_check(
         self,
         df: DataFrame,
-        mappings: list={},
+        mappings: Dict={},
     ) -> Tuple[bool, DataFrame]:
         """
         Check whether Spark DataFrame is of the right size i.e. correct rowcounts.
@@ -115,7 +115,7 @@ class BaseDataPipeline(ABC):
     def _df_values_check(
         self,
         df: DataFrame,
-        mappings: list={},
+        mappings: Dict={},
     ) -> Tuple[bool, DataFrame]:
         """
         Check whether each Spark DataFrame column has their expected values.
@@ -127,7 +127,7 @@ class BaseDataPipeline(ABC):
     def _df_keys_check(
         self,
         df: DataFrame,
-        mappings: list={},
+        mappings: Dict={},
     ) -> Tuple[bool, DataFrame]:
         """
         Check whether Spark DataFrame has the right keys i.e. primary or composite keys are unique per record.
@@ -139,7 +139,7 @@ class BaseDataPipeline(ABC):
     def _df_null_check(
         self,
         df: DataFrame,
-        mappings: list={},
+        mappings: Dict={},
     ) -> Tuple[bool, DataFrame]:
         """
         Check whether each Spark DataFrame column has their acceptable levels of null values.
