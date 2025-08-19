@@ -45,9 +45,12 @@ def get_or_create_spark_session(
     return session
 
 
-def read_core_file(path: str) -> str:
+def read_module_file(
+    file_path: str,
+    caller_path: str=__file__,
+) -> str:
     """
-    Give a path relative to core module, read its content and return it.
+    Give a path relative to "core" module by default, read its content and return it.
 
     Args:
         path: path to file, relative to core directory.
@@ -55,8 +58,8 @@ def read_core_file(path: str) -> str:
     Returns:
         Contents of file as a string.
     """
-    current_path = abspath(dirname(__file__))
-    destination_path = join(current_path, path)
+    current_path = abspath(dirname(caller_path))
+    destination_path = join(current_path, file_path)
 
     with open(destination_path, encoding="utf-8-sig") as file:
         return file.read().replace("\n", " ").rstrip()

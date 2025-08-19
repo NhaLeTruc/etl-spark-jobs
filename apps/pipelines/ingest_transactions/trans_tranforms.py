@@ -6,7 +6,7 @@ from pyspark.sql.functions import col, concat, lit, sha2, struct
 # Internals
 from apps.core.conf.storage import DOCKER_ENV
 from apps.core.mappings.oltp_to_olap_labels import dwh_to_cap_mappings
-from apps.core.utils import read_core_file, cal_partition_dt
+from apps.core.utils import read_module_file, cal_partition_dt
 from apps.core.crud.postgres_ops import read_pg_ops, write_pg_ops
 from apps.core.crud.minio_lake import minio_read, minio_create
 
@@ -34,7 +34,7 @@ def extracts_bronze_transactions(
     Returns:
         Spark DataFrame of Postgres OPS transaction data
     """
-    sql_query = read_core_file(
+    sql_query = read_module_file(
         "crud/sql/trans_extracts.sql"
     ).format(
         partition_column=partition_column, 

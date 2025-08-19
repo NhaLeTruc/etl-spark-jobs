@@ -6,7 +6,7 @@ import logging
 import unittest
 
 # Internals
-from apps.core.utils import cal_partition_dt, read_core_file
+from apps.core.utils import cal_partition_dt, read_module_file
 
 
 # Configure logging to console
@@ -16,7 +16,7 @@ class TestUtils(unittest.TestCase):
 
     def test_cal_partition_dt(self):
         logger = logging.getLogger(__name__)
-        logger.info("\n\n[UNITTEST].[Utils].[function] cal_partition_dt [SUCCESS]")
+        logger.info("\n[UNITTEST].[Utils].[function] cal_partition_dt [SUCCESS]\n")
 
         self.assertEqual(
             cal_partition_dt(
@@ -75,18 +75,34 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(str(cm.exception), "Cannot find valid partition dates!")
 
 
-    def test_read_core_file(self):
+    def test_read_module_file(self):
         logger = logging.getLogger(__name__)
-        logger.info("\n\n[UNITTEST].[Utils].[function] read_core_file [SUCCESS]")
+        logger.info("\n[UNITTEST].[Utils].[function] read_module_file [SUCCESS]\n")
 
+        """
+        Read file from default core module
+        """
         self.assertEqual(
-            read_core_file("crud/sql/trans_extracts.sql").format(
+            read_module_file(
+                file_path="crud/sql/trans_extracts.sql",
+            ).format(
                 table_name="abc",
                 partition_column="ccc",
                 from_dt="12314",
                 to_dt="31423"
             ),
             "SELECT * FROM abc WHERE ccc BETWEEN 12314 AND 31423"
+        )
+
+        """
+        Read file from test module
+        """
+        self.assertEqual(
+            len(read_module_file(
+                file_path="data/ep-popolo-v1.0.json",
+                caller_path=__file__
+            )),
+            9_832_951
         )
 
 
