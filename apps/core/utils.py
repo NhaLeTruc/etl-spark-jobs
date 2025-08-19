@@ -9,15 +9,14 @@ from datetime import datetime, timedelta
 from pyspark.sql import SparkSession
 
 # Internals
-from apps.core.conf.minio_config import OpsMinioConfig
-from apps.core.conf.jdbc import JdbcConfig, DockerEnvJdbcConfig
+from apps.core.conf.minio_config import DockerEnvMinioConfig
 from apps.core.conf.storage import DOCKER_ENV
 from apps.core.constants import DateTimeFormat
 
 
 def get_or_create_spark_session(
     appname: str="etl_job",
-    configs: dict={},
+    configs: Dict={},
     stage_description: Optional[str]=None,
 ) -> SparkSession:
     """
@@ -25,12 +24,8 @@ def get_or_create_spark_session(
     """
     spark_builder = SparkSession.builder.appName(appname)
 
-    # OpsMinioConfig instantiation
-    minio_host = DOCKER_ENV['minio-lake']['container_name']
-    minio_port = DOCKER_ENV['minio-lake']['container_port']
-    minio_conf = OpsMinioConfig(
-        host_name=minio_host,
-        host_port=minio_port,
+    minio_conf = DockerEnvMinioConfig(
+        config=DOCKER_ENV.get("minio-lake")
     )
         
     configs = configs | {
@@ -123,13 +118,3 @@ def cal_partition_dt(
 
     return [partition_from_dt, partition_to_dt]
 
-
-def get_jdbc_config(
-    container_name: str = "postgres"
-) -> JdbcConfig:
-
-    config = DockerEnvJdbcConfig(
-        DOCKER_ENV.get(container_name)
-    )
-
-    return config

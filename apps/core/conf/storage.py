@@ -24,5 +24,9 @@ DOCKER_ENV = {
     "minio-lake": {
         "container_name": "minio-lake",
         "container_port": "9000",
+        "user_var": "MINIO_ACCESS_KEY",
+        "pass_var": "MINIO_SECRET_KEY",
+        "db_var": "",
+        "driver": ""
     }
 }

@@ -4,6 +4,7 @@ minio config objects
 
 # Externals
 import os
+from typing import Dict
 
 
 class MinioConfig:
@@ -35,32 +36,30 @@ class MinioConfig:
         raise NotImplementedError()
     
 
-class OpsMinioConfig(MinioConfig):
+class DockerEnvMinioConfig(MinioConfig):
     """
     configurations specifically for connecting to OPS's minio-lake
     """
     def __init__(
         self,
-        minio_host: str,
-        minio_port: str,
+        config: Dict = {}
     ):
         super().__init__()
-        self.minio_host = minio_host
-        self.minio_port = minio_port
+        self.config = config
 
     
     @property
     def endpoint(self):
-        CMD = f"curl -v {self.minio_host}:{self.minio_port} 2>&1 | grep -o '(.*).' | tr -d '() '"
-        return "http://" + os.popen(CMD).read().replace('\n', '') + ":" + {self.minio_port}
+        CMD = f"curl -v {self.config.get("container_name")}:{self.config.get("container_port")} 2>&1 | grep -o '(.*).' | tr -d '() '"
+        return "http://" + os.popen(CMD).read().replace('\n', '') + ":" + {self.config.get("container_port")}
 
 
     @property
     def access_key(self):
-        return os.getenv("MINIO_ACCESS_KEY")
+        return os.getenv(self.config.get("user_var"))
     
 
     @property
     def secret_key(self):
-        return os.getenv("MINIO_SECRET_KEY")
+        return os.getenv(self.config.get("pass_var"))
         
