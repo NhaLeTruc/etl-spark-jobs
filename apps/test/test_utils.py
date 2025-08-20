@@ -78,7 +78,6 @@ class TestUtils(unittest.TestCase):
     def test_read_module_file(self):
         logger = logging.getLogger(__name__)
         logger.info("\n[UNITTEST].[Utils].[function] read_core_file [SUCCESS]\n")
-
         """
         Read file from default core module
         """
