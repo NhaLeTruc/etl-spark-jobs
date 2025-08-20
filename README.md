@@ -13,6 +13,19 @@ Template for typical data engineer's local development works. Containerized loca
 
 ## Getting Started
 
+Unittest runs:
+
+```bash
+# All unit tests
+python3 -m unittest discover apps/test
+# pipeline unit tests only
+python3 -m unittest apps.test.test_pipeline
+# core.utils unit tests only
+python3 -m unittest apps.test.test_utils
+```
+
+Docker Environment setup
+
 ```bash
 # Start dev env
 make up

@@ -54,8 +54,7 @@ class BaseDataPipeline(ABC):
 
     def enforced_dqc_checks(
         self,
-        df: DataFrame,
-        as_of_date: str,
+        df: DataFrame={},        
         mappings: Dict={},
     ) -> Tuple[bool, DataFrame]:
         """
@@ -90,60 +89,60 @@ class BaseDataPipeline(ABC):
 
     def _df_shape_check(
         self,
-        df: DataFrame,
+        df: DataFrame={},
         mappings: Dict={},
     ) -> Tuple[bool, DataFrame]:
         """
         Check whether Spark DataFrame is of the right shape i.e. correct composite of columns.
         Return a DQC Pass/Fail bool and a KPIs report in form of a Spark DataFrame.
         """
-        return False
+        return False, df
 
 
     def _df_size_check(
         self,
-        df: DataFrame,
+        df: DataFrame={},
         mappings: Dict={},
     ) -> Tuple[bool, DataFrame]:
         """
         Check whether Spark DataFrame is of the right size i.e. correct rowcounts.
         Return a DQC Pass/Fail bool and a KPIs report in form of a Spark DataFrame.
         """
-        return False
+        return False, df
 
 
     def _df_values_check(
         self,
-        df: DataFrame,
+        df: DataFrame={},
         mappings: Dict={},
     ) -> Tuple[bool, DataFrame]:
         """
         Check whether each Spark DataFrame column has their expected values.
         Return a DQC Pass/Fail bool and a KPIs report in form of a Spark DataFrame.
         """
-        return False
+        return False, df
 
 
     def _df_keys_check(
         self,
-        df: DataFrame,
+        df: DataFrame={},
         mappings: Dict={},
     ) -> Tuple[bool, DataFrame]:
         """
         Check whether Spark DataFrame has the right keys i.e. primary or composite keys are unique per record.
         Return a DQC Pass/Fail bool and a KPIs report in form of a Spark DataFrame.
         """
-        return False
+        return False, df
 
 
     def _df_null_check(
         self,
-        df: DataFrame,
+        df: DataFrame={},
         mappings: Dict={},
     ) -> Tuple[bool, DataFrame]:
         """
         Check whether each Spark DataFrame column has their acceptable levels of null values.
         Return a DQC Pass/Fail bool and a KPIs report in form of a Spark DataFrame.
         """
-        return False
+        return False, df
     

@@ -99,4 +99,3 @@ class GoldIngestTransPipeline(BaseDataPipeline):
         self.enforced_dqc_checks(df,gold_dqc_json)
 
         dqcheck_gold_subsets(df)
-
