@@ -78,7 +78,7 @@ class BaseDataPipeline(ABC):
         for flag, report in results:
             go_ahead += flag
             if combined_reports:
-                combined_reports = combined_reports.union(report)
+                combined_reports = combined_reports.unionByName(report)
             else:
                 combined_reports = report
         
@@ -96,7 +96,7 @@ class BaseDataPipeline(ABC):
         Check whether Spark DataFrame is of the right shape i.e. correct composite of columns.
         Return a DQC Pass/Fail bool and a KPIs report in form of a Spark DataFrame.
         """
-        return False, df
+        return False, {}
 
 
     def _df_size_check(
