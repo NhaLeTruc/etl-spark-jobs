@@ -14,7 +14,7 @@ from apps.core.conf.jdbc import JdbcConfig
 from apps.core.utils import get_or_create_spark_session
 
 
-def read_pg_ops(
+def ops_read(
     sql_query: str,
     config: JdbcConfig,
     parallel: bool = False,
@@ -77,7 +77,7 @@ def read_pg_ops(
     return spark.read.format("jdbc").options(**jdbc_options).load()
 
 
-def write_pg_ops(
+def ops_write(
     dbtable: str,
     df: DataFrame,
     config: JdbcConfig,

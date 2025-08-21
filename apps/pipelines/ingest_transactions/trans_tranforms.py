@@ -7,8 +7,8 @@ from pyspark.sql.functions import col, concat, lit, sha2, struct
 from apps.core.conf.storage import DOCKER_ENV
 from apps.core.mappings.oltp_to_olap_labels import dwh_to_cap_mappings
 from apps.core.utils import read_module_file, cal_partition_dt
-from apps.core.crud.postgres_ops import read_pg_ops, write_pg_ops
-from apps.core.crud.minio_lake import minio_read, minio_create
+from apps.core.crud.postgres_ops import ops_read, ops_write
+from apps.core.crud.minio_lake import minio_read, minio_write
 
 
 
@@ -16,6 +16,7 @@ def extracts_bronze_transactions(
     from_dt: str,
     to_dt: str,
     partition_column: str,
+    schema_name: str,
     num_partitions: int = 10,
     parallel: bool = True,
     fetch_size: int = 10_000,
@@ -37,6 +38,7 @@ def extracts_bronze_transactions(
     sql_query = read_module_file(
         "crud/sql/trans_extracts.sql"
     ).format(
+        schema_name= schema_name,
         partition_column=partition_column, 
         from_dt=from_dt, 
         to_dt=to_dt
@@ -48,7 +50,7 @@ def extracts_bronze_transactions(
         num_partitions=num_partitions,
     )
 
-    return read_pg_ops(
+    return ops_read(
         sql_query,
         parallel=parallel,
         partition_column=partition_column,
@@ -57,16 +59,6 @@ def extracts_bronze_transactions(
         num_partitions=num_partitions,
         fetch_size=fetch_size,
     )
-
-
-def dqcheck_bronze_subsets(
-    df: DataFrame,
-    mappings: list={},
-) -> Tuple[bool, DataFrame]:
-    """
-    Perform data quality checks on landed postgres ops transactions.
-    """
-    return (False, [])
 
 
 def transforms_silver_transactions(
@@ -81,16 +73,6 @@ def transforms_silver_transactions(
     return
 
 
-def dqcheck_silver_subsets(
-    df: DataFrame,
-    mappings: list={},
-) -> Tuple[bool, DataFrame]:
-    """
-    Perform data quality checks on landed postgres ops transactions.
-    """
-    return (False, [])
-
-
 def transforms_gold_transactions(
     path: str,
     from_dt: str,
@@ -101,13 +83,3 @@ def transforms_gold_transactions(
     """
 
     return
-
-
-def dqcheck_gold_subsets(
-    df: DataFrame,
-    mappings: list={},
-) -> Tuple[bool, DataFrame]:
-    """
-    Perform data quality checks on landed postgres ops transactions.
-    """
-    return (False, [])

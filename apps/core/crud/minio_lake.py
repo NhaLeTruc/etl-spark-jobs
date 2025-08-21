@@ -11,7 +11,7 @@ from apps.core.utils import get_or_create_spark_session
 from apps.core.constants import StorageFormats
 
 
-def minio_create(
+def minio_write(
     df: DataFrame,
     path: str,
     partition_cols: Optional[List[str]] = None,
