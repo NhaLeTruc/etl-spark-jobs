@@ -8,7 +8,9 @@ from datetime import date, timedelta
 from apps.core.constants import DateTimeFormat
 from apps.core.pipeline import BaseDataPipeline
 from apps.core.crud.minio_lake import minio_write, minio_read
-from apps.core.conf.storage import MINIO_BUCKETS
+from apps.core.crud.postgres_ops import ops_write
+from apps.core.conf.storage import MINIO_BUCKETS, DOCKER_ENV
+from apps.core.conf.jdbc import DockerEnvJdbcConfig
 from apps.core.mappings.ingest_transactions_dqc import (
     bronze_dqc_json,
     silver_dqc_json,
@@ -24,8 +26,10 @@ from apps.pipelines.ingest_transactions.trans_tranforms import (
 bucket_lake = MINIO_BUCKETS["ops"]["lake"] + "/OPS/rental_bronze"
 bucket_house = MINIO_BUCKETS["ops"]["dwh"] + "/OPS/rental_silver"
 bucket_lakehouse = MINIO_BUCKETS["ops"]["lakehouse"] + "/OPS/rental_gold"
+ops_config = DockerEnvJdbcConfig(config=DOCKER_ENV.get("postgres"))
 ops_schema = "postgres"
 partition_dt = "rental_date"
+run_dt = date.today().strftime("%Y-%m-%d")
 
 
 #########################################################################
@@ -35,7 +39,7 @@ class BronzeIngestTransPipeline(BaseDataPipeline):
 
     def __init__(
         self, 
-        as_of_date: str = date.today(), 
+        as_of_date: str = run_dt, 
         lookback_days: int = 365,
     ):
         super().__init__(as_of_date)
@@ -72,12 +76,11 @@ class SilverIngestTransPipeline(BaseDataPipeline):
 
     def __init__(
         self, 
-        as_of_date: str = date.today(),
+        as_of_date: str = run_dt,
     ):
         super().__init__(as_of_date)
 
     def run(self):
-        report_dt = self.as_of_date_fmt()
 
         df = minio_read(
             path=bucket_lake,
@@ -86,7 +89,7 @@ class SilverIngestTransPipeline(BaseDataPipeline):
 
         df = transforms_silver_transactions(
             df=df,
-            report_dt=report_dt,
+            report_dt=self.as_of_date_fmt(),
         )
         
         minio_write(
@@ -105,13 +108,12 @@ class GoldIngestTransPipeline(BaseDataPipeline):
 
     def __init__(
         self, 
-        as_of_date: str = date.today(),
+        as_of_date: str = run_dt,
     ):
         super().__init__(as_of_date)
 
 
     def run(self):
-        report_dt = self.as_of_date_fmt()
 
         df = minio_read(
             path=bucket_lake,
@@ -120,13 +122,19 @@ class GoldIngestTransPipeline(BaseDataPipeline):
 
         df = transforms_gold_transactions(
             df=df,
-            report_dt=report_dt,
+            report_dt=self.as_of_date_fmt(),
         )
         
+        self.enforced_dqc_checks(df,gold_dqc_json)
+
         minio_write(
             df=df,
             path=bucket_house,
             partition_cols=partition_dt,
         )
-        
-        self.enforced_dqc_checks(df,gold_dqc_json)
+
+        ops_write(
+            dbtable="rental_gold",
+            df=df,
+            config=ops_config,
+        )
