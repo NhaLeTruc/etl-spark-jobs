@@ -8,8 +8,6 @@ from apps.core.conf.storage import DOCKER_ENV
 from apps.core.mappings.oltp_to_olap_labels import dwh_to_cap_mappings
 from apps.core.utils import read_module_file, cal_partition_dt
 from apps.core.crud.postgres_ops import ops_read, ops_write
-from apps.core.crud.minio_lake import minio_read, minio_write
-
 
 
 def extracts_bronze_transactions(
@@ -62,24 +60,28 @@ def extracts_bronze_transactions(
 
 
 def transforms_silver_transactions(
-    path: str,
-    from_dt: str,
-    to_dt: str,
+    df: DataFrame,
+    report_dt: str,
 ) -> DataFrame:
     """
-    Extracted Postgres OPS data is transformed into silver data
+    Bronze data is transformed into silver data through: 
+        cleaning.
+        business logics validating.
+        structured as atomic transactions for easy analysis.
     """
+    df.withColumn("report_date", lit(report_dt))
 
-    return
+    return df
 
 
 def transforms_gold_transactions(
-    path: str,
-    from_dt: str,
-    to_dt: str,
+    df: DataFrame,
+    report_dt: str,
 ) -> DataFrame:
     """
-    Extracted Postgres OPS data is transformed into gold data
+    Silver data is transformed into gold data through:
+        curating into dedicated business divsion's aggregated views.
     """
+    df.withColumn("report_date", lit(report_dt))
 
-    return
+    return df

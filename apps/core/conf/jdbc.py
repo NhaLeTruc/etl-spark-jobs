@@ -73,8 +73,8 @@ class DockerEnvJdbcConfig(JdbcConfig):
     
     @property
     def host(self):
-        CMD = f"curl -v {self.host_name}:{self.host_port} 2>&1 | grep -o '(.*).' | tr -d '() '"
-        return "http://" + os.popen(CMD).read().replace('\n', '') + ":" + {self.host_port}
+        CMD = f"curl -v {self.config.get("container_name")}:{self.config.get("container_name")} 2>&1 | grep -o '(.*).' | tr -d '() '"
+        return "http://" + os.popen(CMD).read().replace('\n', '') + ":" + {self.config.get("container_port")}
 
 
     @property
