@@ -1,5 +1,6 @@
 # Externals
 from typing import Tuple
+from datetime import date
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, concat, lit, sha2, struct
 
@@ -68,11 +69,15 @@ def transforms_silver_transactions(
         cleaning.
         business logics validating.
         structured as atomic transactions for easy analysis.
+            1. Cast all values in DataFrame as string.
+            2. Remove has not been released films.
+            3. Remove test film titles, all of which has special characters.
+            4. Add report date.
     """
-    # 1. Cast all values in DataFrame as string
-    # . Add report date
     df = df.select([col(c).cast("string") for c in df.columns]) \
-            .withColumn("report_date", lit(report_dt))\
+            .filter(col("release_year") > date.today().year) \
+            .filter(col("title").rlike("^[a-zA-Z0-9]{3,60}$")) \
+            .withColumn("report_date", lit(report_dt)) \
 
     return df
 
@@ -86,16 +91,16 @@ def transforms_gold_transactions(
         curating into dedicated business divsion's aggregated views.
             1. Cast all values in DataFrame as string.
             2. Remove horror films.
-            3. Filter for customer segments in NYC and Saigon.
-            4. Fill in NA value with DWH compliant string.
-            5. Map columns' name to DWH compliant column names
-            6. Add report date
+            3. Keep only customers in NYC and Saigon.
+            4. Fill in NA values with DWH compliant string.
+            5. Map columns' name to DWH compliant column names.
+            6. Add report date.
     """
     df = df.select([col(c).cast("string") for c in df.columns]) \
             .filter(col("category_name") == "horror") \
             .filter(col("city").isin(["NYC","Saigon"])) \
-            .fillna({"postal_code": "Not Available"}) \
+            .fillna({"postal_code": "Not Applicable"}) \
             .select([col(c).alias(ops_dwh_transactions_map.get(c, c)) for c in df.columns]) \
-            .withColumn("report_date", lit(report_dt))\
+            .withColumn("report_date", lit(report_dt)) \
 
     return df
