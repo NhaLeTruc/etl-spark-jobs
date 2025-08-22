@@ -5,7 +5,7 @@ from pyspark.sql.functions import col, concat, lit, sha2, struct
 
 # Internals
 from apps.core.conf.storage import DOCKER_ENV
-from apps.core.mappings.oltp_to_olap_labels import dwh_to_cap_mappings
+from apps.core.mappings.oltp_to_olap_labels import ops_dwh_transactions_map
 from apps.core.utils import read_module_file, cal_partition_dt
 from apps.core.crud.postgres_ops import ops_read, ops_write
 
@@ -69,7 +69,10 @@ def transforms_silver_transactions(
         business logics validating.
         structured as atomic transactions for easy analysis.
     """
-    df.withColumn("report_date", lit(report_dt))
+    # 1. Cast all values in DataFrame as string
+    # . Add report date
+    df = df.select([col(c).cast("string") for c in df.columns]) \
+            .withColumn("report_date", lit(report_dt))\
 
     return df
 
@@ -81,7 +84,18 @@ def transforms_gold_transactions(
     """
     Silver data is transformed into gold data through:
         curating into dedicated business divsion's aggregated views.
+            1. Cast all values in DataFrame as string.
+            2. Remove horror films.
+            3. Filter for customer segments in NYC and Saigon.
+            4. Fill in NA value with DWH compliant string.
+            5. Map columns' name to DWH compliant column names
+            6. Add report date
     """
-    df.withColumn("report_date", lit(report_dt))
+    df = df.select([col(c).cast("string") for c in df.columns]) \
+            .filter(col("category_name") == "horror") \
+            .filter(col("city").isin(["NYC","Saigon"])) \
+            .fillna({"postal_code": "Not Available"}) \
+            .select([col(c).alias(ops_dwh_transactions_map.get(c, c)) for c in df.columns]) \
+            .withColumn("report_date", lit(report_dt))\
 
     return df
