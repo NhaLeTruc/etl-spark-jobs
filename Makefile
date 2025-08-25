@@ -13,8 +13,22 @@ deep_clean:
 	sudo docker network prune -f
 	sudo docker builder prune -fa
 
+apps_zip:
+	tar -caf spark/apps/core.zip apps/core
+	tar -caf spark/apps/piplines.zip apps/pipelines
+
+core_zip:
+	tar -caf spark/apps/core.zip apps/core
+
+pipe_zip:
+	tar -caf spark/apps/piplines.zip apps/pipelines
+
 spark_submit:
-	sudo docker exec spark-master spark-submit --master spark://spark-master:7077 --deploy-mode client ./opt/bitnami/spark/apps$(app)
+	sudo docker exec spark-master spark-submit \
+		--master local[*] \
+		--deploy-mode client \
+		--py-files ./opt/bitnami/spark/apps/core.zip ./opt/bitnami/spark/apps/pipelines.zip
+		./opt/bitnami/spark/apps$(app)
 
 run-scaled:
 	make down && docker-compose up --scale spark-worker=3

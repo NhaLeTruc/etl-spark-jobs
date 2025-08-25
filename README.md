@@ -24,6 +24,18 @@ python3 -m unittest apps.test.test_pipeline
 python3 -m unittest apps.test.test_utils
 ```
 
+Create and deploy zip files for `apps/core` and `apps/pipelines`
+
+```bash
+make apps_zip
+
+# only `apps/core`
+make core_zip
+
+# only `apps/pipelines`
+make pipe_zip
+```
+
 Docker Environment setup
 
 ```bash
@@ -99,5 +111,3 @@ spark-submit \
   --input_path s3://my-bucket/input/data.csv \
   --output_path s3://my-bucket/output/result.csv
 ```
-
-
