@@ -69,3 +69,35 @@ unzip dvdrental.zip
 
 pg_restore -U postgres -d dvdrental
 ```
+
+## Deployment
+
+1. Ensure all required third-party Python libraries are available on the cluster or can be provided using `--py-files` or a virtual environment.
+2. Package `apps/core` and `apps/pipelines` into a .zip files.
+3. Configure your application to access input and output data from a location accessible by the cluster (e.g., HDFS, S3, cloud storage).
+4. The spark-submit command is used to launch your PySpark application on the cluster. Key options include:
+    + `--master <master_url>`: Specifies the Spark master URL (e.g., yarn, spark://master:7077, local[*]).
+    + `--deploy-mode <mode>`: Determines where the driver program runs (client or cluster).
+        + Client mode: The driver runs on the machine where spark-submit is executed.
+        + Cluster mode: The driver runs on one of the worker nodes within the cluster.
+    + `--py-files <files>`: Comma-separated list of .zip, .egg, or .py files to be added to the Python path.
+    + `--driver-memory <memory>`: Amount of memory to allocate for the driver.
+    + `--executor-memory <memory>`: Amount of memory to allocate for each executor.
+    + `--num-executors <num>`: Number of executors to launch.
+    + `<your_main_script.py>`: The path to your main PySpark application script.
+    + `[arguments]`: Any arguments you want to pass to your PySpark script.
+
+```bash
+spark-submit \
+  --master yarn \
+  --deploy-mode cluster \
+  --py-files my_modules.zip \
+  --driver-memory 2g \
+  --executor-memory 4g \
+  --num-executors 5 \
+  my_pyspark_app.py \
+  --input_path s3://my-bucket/input/data.csv \
+  --output_path s3://my-bucket/output/result.csv
+```
+
+
