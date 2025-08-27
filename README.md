@@ -80,6 +80,12 @@ scp dvdrental.zip debian@192.168.1.11:/home/debian/
 unzip dvdrental.zip
 
 pg_restore -U postgres -d dvdrental
+
+psql -h <hostname> -p <port> -U <username> -d <database>
+
+apt install pv
+
+pv dvdrental.tar | pg_restore -U postgres_usr -d dvdrental
 ```
 
 ## Deployment

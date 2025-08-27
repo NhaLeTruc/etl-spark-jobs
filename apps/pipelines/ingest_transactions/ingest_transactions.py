@@ -27,9 +27,10 @@ bucket_lake = MINIO_BUCKETS["ops"]["lake"] + "/OPS/rental_bronze"
 bucket_house = MINIO_BUCKETS["ops"]["dwh"] + "/OPS/rental_silver"
 bucket_lakehouse = MINIO_BUCKETS["ops"]["lakehouse"] + "/OPS/rental_gold"
 ops_config = DockerEnvJdbcConfig(config=DOCKER_ENV.get("postgres"))
-ops_schema = "postgres"
+ops_schema = "dvdrental.public"
 partition_dt = "rental_date"
-run_dt = date.today().strftime("%Y-%m-%d")
+# run_dt = date.today().strftime("%Y-%m-%d")
+run_dt = "2006-02-14"
 
 
 #########################################################################
@@ -40,7 +41,7 @@ class BronzeIngestTransPipeline(BaseDataPipeline):
     def __init__(
         self, 
         as_of_date: str = run_dt, 
-        lookback_days: int = 365,
+        lookback_days: int = 100,
     ):
         super().__init__(as_of_date)
         self.lookback_days = lookback_days
