@@ -6,6 +6,7 @@ from pyspark.sql.functions import col, concat, lit, sha2, struct
 
 # Internals
 from apps.core.conf.storage import DOCKER_ENV
+from apps.core.conf.jdbc import JdbcConfig
 from apps.core.mappings.oltp_to_olap_labels import ops_dwh_transactions_map
 from apps.core.utils import read_module_file, cal_partition_dt
 from apps.core.crud.postgres_ops import ops_read, ops_write
@@ -16,6 +17,7 @@ def extracts_bronze_transactions(
     to_dt: str,
     partition_column: str,
     schema_name: str,
+    config: JdbcConfig,
     num_partitions: int = 10,
     parallel: bool = True,
     fetch_size: int = 10_000,
@@ -51,6 +53,7 @@ def extracts_bronze_transactions(
 
     return ops_read(
         sql_query,
+        config=config,
         parallel=parallel,
         partition_column=partition_column,
         lower_bound=partition_dt[0],
