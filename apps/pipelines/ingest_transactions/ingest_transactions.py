@@ -31,6 +31,7 @@ from apps.pipelines.ingest_transactions.trans_tranforms import (
 # Variables
 # run_dt = date.today().strftime("%Y-%m-%d")
 run_dt = "2006-02-14"
+ops_config = DockerEnvJdbcConfig(config=DOCKER_ENV.get("postgres"))
 
 
 #########################################################################
@@ -57,6 +58,7 @@ class BronzeIngestTransPipeline(BaseDataPipeline):
             from_dt=from_dt,
             to_dt=to_dt,
             schema_name=OPS_SCHEMAS,
+            config=ops_config,
             partition_column="rental_date",
             num_partitions=5,
         )
@@ -115,8 +117,6 @@ class GoldIngestTransPipeline(BaseDataPipeline):
 
 
     def run(self):
-
-        ops_config = DockerEnvJdbcConfig(config=DOCKER_ENV.get("postgres"))
 
         df = minio_read(
             path=bucket_lake,

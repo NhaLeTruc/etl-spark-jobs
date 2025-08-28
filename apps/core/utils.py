@@ -2,7 +2,7 @@
 Repository of reusable utility methods
 """
 # Externals
-import os, json
+import os, json, zipfile
 from os.path import abspath, dirname, join
 from typing import Any, Optional, Dict, List
 from datetime import datetime, timedelta
@@ -61,6 +61,15 @@ def read_module_file(
     current_path = abspath(dirname(caller_path))
     destination_path = join(current_path, file_path)
 
+    # Handle spark submit static file paths
+    if ".zip" in destination_path:
+        zip_filename, core_dir = current_path.split(".zip/", 1)
+        zip_path = f"{zip_filename}.zip"
+        with zipfile.ZipFile(zip_path, "r") as zip_file, zip_file.open(
+            f"{core_dir}/{file_path}", "r"
+        ) as file:
+            return file.read().decode(encoding="utf-8-sig")
+ 
     with open(destination_path, encoding="utf-8-sig") as file:
         return file.read().replace("\n", " ").rstrip()
 

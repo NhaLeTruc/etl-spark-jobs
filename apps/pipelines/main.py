@@ -1,4 +1,4 @@
-from pipelines.ingest_transactions.ingest_transactions import (
+from apps.pipelines.ingest_transactions.ingest_transactions import (
     BronzeIngestTransPipeline,
     SilverIngestTransPipeline,
     GoldIngestTransPipeline,
