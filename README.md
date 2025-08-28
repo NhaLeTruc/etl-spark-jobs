@@ -123,5 +123,5 @@ zip -r -j apps.zip apps/*
 
 mv apps.zip spark/apps/
 
-spark-submit --master spark://spark-master:7077 --deploy-mode client --py-files core.zip pipelines.zip ingest_transactions.py
+spark-submit --master spark://spark-master:7077 --deploy-mode client --py-files apps.zip main.py
 ```

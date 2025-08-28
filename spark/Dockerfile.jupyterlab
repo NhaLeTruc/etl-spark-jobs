@@ -25,6 +25,7 @@ RUN jupyter toree install \
 
 RUN adduser defaultuser \
     && usermod -u 1000 --gid 0 defaultuser \
+    && mkdir /tmp/spark-events \
     && chown -R defaultuser:defaultuser /tmp /.* /opt/bitnami \
     && chmod -R 775 /tmp /.* /opt/bitnami
 

@@ -4,11 +4,11 @@ FROM {schema_name}.rental
 LEFT JOIN {schema_name}.customer ON
     rental.customer_id = customer.customer_id
 
-LEFT JOIN {schema_name}.`address` ON
-    customer.address_id = `address`.address_id
+LEFT JOIN {schema_name}.address ON
+    customer.address_id = address.address_id
 
 LEFT JOIN {schema_name}.city ON
-    `address`.city_id = city.city_id
+    address.city_id = city.city_id
 
 LEFT JOIN {schema_name}.payment ON
     rental.rental_id = payment.rental_id
