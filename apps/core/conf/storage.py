@@ -30,3 +30,9 @@ DOCKER_ENV = {
         "driver": ""
     }
 }
+
+
+OPS_SCHEMAS = "dvdrental.public"
+bucket_lake = MINIO_BUCKETS["ops"]["lake"] + "/OPS/rental_bronze"
+bucket_house = MINIO_BUCKETS["ops"]["dwh"] + "/OPS/rental_silver"
+bucket_lakehouse = MINIO_BUCKETS["ops"]["lakehouse"] + "/OPS/rental_gold"

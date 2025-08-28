@@ -26,7 +26,7 @@ pipe_zip:
 spark_submit:
 	sudo docker exec spark-master spark-submit \
 		--master spark://spark-master:7077 \
-		--deploy-mode client \
+		--deploy-mode cluster \
 		--py-files ./opt/bitnami/spark/apps/core.zip ./opt/bitnami/spark/apps/pipelines.zip
 		./opt/bitnami/spark/apps$(app)
 

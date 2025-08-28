@@ -116,4 +116,12 @@ spark-submit \
   my_pyspark_app.py \
   --input_path s3://my-bucket/input/data.csv \
   --output_path s3://my-bucket/output/result.csv
+
+cp apps/pipelines/ingest_transactions/ingest_transactions.py spark/apps/
+
+zip -r -j apps.zip apps/*
+
+mv apps.zip spark/apps/
+
+spark-submit --master spark://spark-master:7077 --deploy-mode client --py-files core.zip pipelines.zip ingest_transactions.py
 ```

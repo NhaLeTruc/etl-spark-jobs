@@ -9,7 +9,13 @@ from apps.core.constants import DateTimeFormat
 from apps.core.pipeline import BaseDataPipeline
 from apps.core.crud.minio_lake import minio_write, minio_read
 from apps.core.crud.postgres_ops import ops_write
-from apps.core.conf.storage import MINIO_BUCKETS, DOCKER_ENV
+from apps.core.conf.storage import (
+    DOCKER_ENV, 
+    OPS_SCHEMAS,
+    bucket_lake,
+    bucket_house,
+    bucket_lakehouse
+)
 from apps.core.conf.jdbc import DockerEnvJdbcConfig
 from apps.core.mappings.ingest_transactions_dqc import (
     bronze_dqc_json,
@@ -23,12 +29,6 @@ from apps.pipelines.ingest_transactions.trans_tranforms import (
 )
 
 # Variables
-bucket_lake = MINIO_BUCKETS["ops"]["lake"] + "/OPS/rental_bronze"
-bucket_house = MINIO_BUCKETS["ops"]["dwh"] + "/OPS/rental_silver"
-bucket_lakehouse = MINIO_BUCKETS["ops"]["lakehouse"] + "/OPS/rental_gold"
-ops_config = DockerEnvJdbcConfig(config=DOCKER_ENV.get("postgres"))
-ops_schema = "dvdrental.public"
-partition_dt = "rental_date"
 # run_dt = date.today().strftime("%Y-%m-%d")
 run_dt = "2006-02-14"
 
@@ -56,15 +56,15 @@ class BronzeIngestTransPipeline(BaseDataPipeline):
         df = extracts_bronze_transactions(
             from_dt=from_dt,
             to_dt=to_dt,
-            schema_name=ops_schema,
-            partition_column=partition_dt,
+            schema_name=OPS_SCHEMAS,
+            partition_column="rental_date",
             num_partitions=5,
         )
         
         minio_write(
             df=df,
             path=bucket_lake,
-            partition_cols=partition_dt,
+            partition_cols="rental_date",
         )
         
         self.enforced_dqc_checks(df,bronze_dqc_json)
@@ -116,6 +116,8 @@ class GoldIngestTransPipeline(BaseDataPipeline):
 
     def run(self):
 
+        ops_config = DockerEnvJdbcConfig(config=DOCKER_ENV.get("postgres"))
+
         df = minio_read(
             path=bucket_lake,
             table_name="rental_silver",
@@ -131,7 +133,7 @@ class GoldIngestTransPipeline(BaseDataPipeline):
         minio_write(
             df=df,
             path=bucket_house,
-            partition_cols=partition_dt,
+            partition_cols="rental_date",
         )
 
         ops_write(
