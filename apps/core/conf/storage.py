@@ -4,10 +4,10 @@ Storage facts
 
 MINIO_BUCKETS = {
     "ops": {
-        "dummy": "s3://dummy",
-        "lake": "s3://lake",
-        "lakehouse": "s3://lakehouse",
-        "dwh": "s3://warehouse",
+        "dummy": "s3a://dummy",
+        "lake": "s3a://lake",
+        "lakehouse": "s3a://lakehouse",
+        "dwh": "s3a://warehouse",
     }
 }
 

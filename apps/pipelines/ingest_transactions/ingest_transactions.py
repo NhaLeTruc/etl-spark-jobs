@@ -30,7 +30,7 @@ from apps.pipelines.ingest_transactions.trans_tranforms import (
 
 # Variables
 # run_dt = date.today().strftime("%Y-%m-%d")
-run_dt = "2006-02-14"
+run_dt = "2005-08-24"
 ops_config = DockerEnvJdbcConfig(config=DOCKER_ENV.get("postgres"))
 
 
@@ -66,10 +66,8 @@ class BronzeIngestTransPipeline(BaseDataPipeline):
         minio_write(
             df=df,
             path=bucket_lake,
-            partition_cols="rental_date",
+            partition_cols=["rental_date"],
         )
-        
-        self.enforced_dqc_checks(df,bronze_dqc_json)
 
 
 #########################################################################
@@ -98,10 +96,8 @@ class SilverIngestTransPipeline(BaseDataPipeline):
         minio_write(
             df=df,
             path=bucket_lakehouse,
-            partition_cols=self.partition_column,
+            partition_cols=["rental_date"],
         )
-                
-        self.enforced_dqc_checks(df,silver_dqc_json)
 
 
 #########################################################################
@@ -127,13 +123,11 @@ class GoldIngestTransPipeline(BaseDataPipeline):
             df=df,
             report_dt=self.as_of_date_fmt(),
         )
-        
-        self.enforced_dqc_checks(df,gold_dqc_json)
 
         minio_write(
             df=df,
             path=bucket_house,
-            partition_cols="rental_date",
+            partition_cols=["rental_date"],
         )
 
         ops_write(

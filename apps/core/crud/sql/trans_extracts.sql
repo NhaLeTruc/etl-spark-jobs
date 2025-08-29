@@ -26,4 +26,4 @@ LEFT JOIN {schema_name}.category ON
     film_category.category_id = category.category_id
 
 WHERE 1=1
-AND rental.{partition_column} BETWEEN {from_dt} AND {to_dt}
+AND rental.{partition_column} BETWEEN '{from_dt}' AND '{to_dt}'
