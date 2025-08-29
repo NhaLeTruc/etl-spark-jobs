@@ -15,7 +15,7 @@ def minio_write(
     df: DataFrame,
     path: str,
     partition_cols: Optional[List[str]] = None,
-    format_type: StorageFormats = StorageFormats.MINIO_STORAGE_FORMAT,
+    format_type: StorageFormats = StorageFormats.MINIO_STORAGE_FORMAT.value,
     mode: str = "overwrite",
     options: dict = {},
 ) -> None:
@@ -31,7 +31,7 @@ def minio_write(
     """
     writer = df.write
     if partition_cols:
-        writer = writer.partitionby(*partition_cols)
+        writer = writer.partitionBy(*partition_cols)
     writer.format(format_type).mode(mode).options(**options).save(path)
 
 
@@ -39,7 +39,7 @@ def minio_read(
     path: str,
     sql: Optional[str] = None,
     table_name: str = "MINIO",
-    format_type: StorageFormats = StorageFormats.MINIO_STORAGE_FORMAT,
+    format_type: StorageFormats = StorageFormats.MINIO_STORAGE_FORMAT.value,
 ) -> DataFrame:
     """
     Read data in minio-lake bucket path as a Spark DataFrame
