@@ -67,6 +67,15 @@ class BronzeIngestTransPipeline(BaseDataPipeline):
             df=df,
             path=bucket_lake,
             partition_cols=["rental_date"],
+            num_partitions=5,
+            options={
+                "batchsize": "20000",
+                "rewriteBatchedStatements": "true",
+                "isolationLevel": "NONE",
+                "numPartitions": "5",
+                "truncate": "true",
+                "compression": "snappy",
+            }
         )
 
 
