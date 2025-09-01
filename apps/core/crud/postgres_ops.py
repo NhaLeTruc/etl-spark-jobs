@@ -82,6 +82,7 @@ def ops_write(
     df: DataFrame,
     config: JdbcConfig,
     mode: str = "append",
+    options: dict = {},
 ) -> None:
     """
     Write data to postgres OPS
@@ -97,7 +98,7 @@ def ops_write(
         "password": config.password,
         "driver": config.driver,
         "dbtable": dbtable,
-    }
+    }.update(options)
 
     try:
         df.write.format("jdbc").options(**jdbc_options).mode(mode).save()
