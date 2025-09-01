@@ -60,7 +60,7 @@ def extracts_bronze_transactions(
         upper_bound=partition_dt[1],
         num_partitions=num_partitions,
         fetch_size=fetch_size,
-    )
+    ).withColumn("partition_date", col("rental_date").strftime("%Y-%m-%d"))
 
 
 def transforms_silver_transactions(
