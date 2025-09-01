@@ -69,12 +69,8 @@ class BronzeIngestTransPipeline(BaseDataPipeline):
             partition_cols=["rental_date"],
             num_partitions=5,
             options={
-                "batchsize": "20000",
-                "rewriteBatchedStatements": "true",
-                "isolationLevel": "NONE",
                 "numPartitions": "5",
-                "truncate": "true",
-                "compression": "snappy",
+                "compression": "gzip",
             }
         )
 
@@ -143,4 +139,12 @@ class GoldIngestTransPipeline(BaseDataPipeline):
             dbtable="rental_gold",
             df=df,
             config=ops_config,
+            options={
+                "batchsize": "20000",
+                "rewriteBatchedStatements": "true",
+                "isolationLevel": "NONE",
+                "numPartitions": "5",
+                "truncate": "true",
+                "compression": "gzip",
+            }
         )
