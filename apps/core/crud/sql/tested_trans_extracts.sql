@@ -58,7 +58,7 @@ LEFT JOIN dvdrental.public.category ON
     film_category.category_id = category.category_id
 
 WHERE 1=1
-AND rental.rental_date BETWEEN '2005-11-06' AND '2005-08-24'
+AND rental.rental_date BETWEEN '2005-05-24' AND '2005-08-24'
 ;
 
 SELECT MIN(rental_date), MAX(rental_date) FROM dvdrental.public.rental
