@@ -2,7 +2,7 @@
 from typing import Tuple
 from datetime import date
 from pyspark.sql import DataFrame
-from pyspark.sql.functions import col, concat, lit, sha2, struct
+from pyspark.sql.functions import col, concat, lit, sha2, to_date
 
 # Internals
 from apps.core.conf.storage import DOCKER_ENV
@@ -51,7 +51,7 @@ def extracts_bronze_transactions(
         num_partitions=num_partitions,
     )
 
-    return ops_read(
+    res_df = ops_read(
         sql_query,
         config=config,
         parallel=parallel,
@@ -60,8 +60,9 @@ def extracts_bronze_transactions(
         upper_bound=partition_dt[1],
         num_partitions=num_partitions,
         fetch_size=fetch_size,
-    ).withColumn("partition_date", col("rental_date").strftime("%Y-%m-%d"))
+    )
 
+    return res_df.withColumn("partition_date", to_date(col("rental_date")))
 
 def transforms_silver_transactions(
     df: DataFrame,
