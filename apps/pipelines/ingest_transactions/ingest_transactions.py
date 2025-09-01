@@ -66,7 +66,7 @@ class BronzeIngestTransPipeline(BaseDataPipeline):
         minio_write(
             df=df,
             path=bucket_lake,
-            partition_cols=["rental_date"],
+            partition_cols=["partition_date"],
             options={
                 "numPartitions": "5",
                 "compression": "gzip",
