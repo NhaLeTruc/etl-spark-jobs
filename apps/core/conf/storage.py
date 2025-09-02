@@ -34,5 +34,5 @@ DOCKER_ENV = {
 
 OPS_SCHEMAS = "dvdrental.public"
 bucket_lake = MINIO_BUCKETS["ops"]["lake"] + "/OPS/rental_bronze"
-bucket_lakehouse = MINIO_BUCKETS["ops"]["dwh"] + "/OPS/rental_silver"
-bucket_house = MINIO_BUCKETS["ops"]["lakehouse"] + "/OPS/rental_gold"
+bucket_lakehouse = MINIO_BUCKETS["ops"]["lakehouse"] + "/OPS/rental_silver"
+bucket_house = MINIO_BUCKETS["ops"]["dwh"] + "/OPS/rental_gold"

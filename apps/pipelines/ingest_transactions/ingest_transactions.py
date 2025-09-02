@@ -2,7 +2,7 @@
 main file of pipeline object "ingest_transactions"
 """
 # Externals
-from datetime import date, timedelta
+from datetime import timedelta
 
 # Internals
 from apps.core.constants import DateTimeFormat
@@ -121,7 +121,7 @@ class GoldIngestTransPipeline(BaseDataPipeline):
     def run(self):
 
         df = minio_read(
-            path=bucket_lake,
+            path=bucket_lakehouse,
             table_name="rental_silver",
         )
 
@@ -133,7 +133,10 @@ class GoldIngestTransPipeline(BaseDataPipeline):
         minio_write(
             df=df,
             path=bucket_house,
-            partition_cols=["rental_date"],
+            partition_cols=["partition_date"],
+            options={
+                "compression": "gzip",
+            }
         )
 
         ops_write(
