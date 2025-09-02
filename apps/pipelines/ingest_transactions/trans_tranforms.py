@@ -1,15 +1,14 @@
 # Externals
-from typing import Tuple
 from datetime import date
 from pyspark.sql import DataFrame
-from pyspark.sql.functions import col, concat, lit, sha2, to_date
+from pyspark.sql.functions import col, regexp_replace, lit, to_date
 
 # Internals
 from apps.core.conf.storage import DOCKER_ENV
 from apps.core.conf.jdbc import JdbcConfig
 from apps.core.mappings.oltp_to_olap_labels import ops_dwh_transactions_map
 from apps.core.utils import read_module_file, cal_partition_dt
-from apps.core.crud.postgres_ops import ops_read, ops_write
+from apps.core.crud.postgres_ops import ops_read
 
 
 def extracts_bronze_transactions(
@@ -81,9 +80,9 @@ def transforms_silver_transactions(
     """
     df = df.where(col("activebool") == col("active")) \
             .where(col("release_year") < date.today().year) \
-            .where(col("title").rlike("^[a-zA-Z0-9]{3,60}$")) \
-            .withColumn("report_date", lit(report_dt)) \
+            .where(regexp_replace(col("title"), "\\s+", "").rlike("^[a-zA-Z0-9]{3,60}$")) \
             .select([col(c).cast("string") for c in df.columns]) \
+            .withColumn("report_date", lit(report_dt)) \
 
     return df
 
