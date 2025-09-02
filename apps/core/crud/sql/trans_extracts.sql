@@ -8,6 +8,7 @@ SELECT
     customer.last_name,
     customer.email,
     customer.activebool,
+    customer.active,
     customer.create_date,
     customer.last_update AS last_customer_update,
     customer.address_id,
