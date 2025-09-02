@@ -5,6 +5,9 @@ up:
 	sudo $(DC) up -d
 
 down:
+	sudo $(DC) down
+
+deep_down:
 	sudo $(DC) down --volumes --remove-orphans
 	sudo docker network prune -f
 

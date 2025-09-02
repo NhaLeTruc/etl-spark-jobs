@@ -68,7 +68,6 @@ class BronzeIngestTransPipeline(BaseDataPipeline):
             path=bucket_lake,
             partition_cols=["partition_date"],
             options={
-                "numPartitions": "5",
                 "compression": "gzip",
             }
         )

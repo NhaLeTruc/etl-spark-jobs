@@ -27,7 +27,7 @@ def extracts_bronze_transactions(
 
     Args:
         from_dt: Get transactions from this date onwards (inclusive), format of yyyy-MM-dd, e.g. '2025-01-01'
-        to_dt: Get transactions up to this date (inclusive), formtat of yyyy-MM-dd, e.g. '2025-01-01'
+        to_dt: Get transactions up to this date (inclusive), format of yyyy-MM-dd, e.g. '2025-01-01'
         partition_column: Name of column by which the data will be partitioned
         parallel: If set to True, Spark will launch multiple executors to fetch data and parallelize workloads.
         fetch_size: The number of rows to bet fetched from the database in a single round-trip
@@ -73,15 +73,17 @@ def transforms_silver_transactions(
         cleaning.
         business logics validating.
         structured as atomic transactions for easy analysis.
-            1. Cast all values in DataFrame as string.
+            1. Remove assumed corrupted records.
             2. Remove has not been released films.
             3. Remove test film titles, all of which has special characters.
             4. Add report date.
+            5. Cast all values in DataFrame as string.
     """
-    df = df.select([col(c).cast("string") for c in df.columns]) \
-            .filter(col("release_year") > date.today().year) \
-            .filter(col("title").rlike("^[a-zA-Z0-9]{3,60}$")) \
+    df = df.where(col("activebool") == col("active")) \
+            .where(col("release_year") < date.today().year) \
+            .where(col("title").rlike("^[a-zA-Z0-9]{3,60}$")) \
             .withColumn("report_date", lit(report_dt)) \
+            .select([col(c).cast("string") for c in df.columns]) \
 
     return df
 
@@ -93,18 +95,22 @@ def transforms_gold_transactions(
     """
     Silver data is transformed into gold data through:
         curating into dedicated business divsion's aggregated views.
-            1. Cast all values in DataFrame as string.
+            1. Remove film which length is shorter than 90 minutes.
             2. Remove horror films.
-            3. Keep only customers in NYC and Saigon.
+            3. Keep only customers in relevant cities.
             4. Fill in NA values with DWH compliant string.
             5. Map columns' name to DWH compliant column names.
             6. Add report date.
+            7. Cast all values in DataFrame as string.
     """
-    df = df.select([col(c).cast("string") for c in df.columns]) \
-            .filter(col("category_name") == "horror") \
-            .filter(col("city").isin(["NYC","Saigon"])) \
+    df = df.where(col("length") > 90) \
+            .where(col("category_name") != "Horror") \
+            .where(col("city").isin(["Aurora", "London", "Saint-Denis", "Cape Coral", "Molodetno", "Tanza", "Changzhou", "Ourense (Orense)"])) \
             .fillna({"postal_code": "Not Applicable"}) \
             .select([col(c).alias(ops_dwh_transactions_map.get(c, c)) for c in df.columns]) \
             .withColumn("report_date", lit(report_dt)) \
+            .select([col(c).cast("string") for c in df.columns]) \
+            
+    # TODO: Rename columns to gold standard.
 
     return df

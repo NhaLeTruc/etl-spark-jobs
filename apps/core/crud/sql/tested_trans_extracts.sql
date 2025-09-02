@@ -1,4 +1,4 @@
--- 2311 rows returned
+-- 2311 records returned
 SELECT
     *
 FROM dvdrental.public.rental
@@ -30,8 +30,36 @@ WHERE 1=1
 AND rental.rental_date BETWEEN '2005-06-14' AND '2005-06-22'
 ;
 
+-- 15_866 records returned
 SELECT
-    rental.*
+    rental.rental_id,
+    rental.rental_date,
+    rental.return_date,
+    rental.last_update AS last_rental_update,
+    rental.customer_id,
+    customer.first_name,
+    customer.last_name,
+    customer.email,
+    customer.activebool,
+    customer.create_date,
+    customer.last_update AS last_customer_update,
+    customer.address_id,
+    address.address,
+    address.address2,
+    address.district,
+    address.postal_code,
+    address.phone,
+    address.last_update AS last_address_update,
+    address.city_id,
+    city.city,
+    payment.payment_id,
+    payment.amount,
+    payment.payment_date,
+    inventory.inventory_id,
+    inventory.last_update AS last_inventory_update,
+    category.name AS category_name,
+    film.*  
+
 FROM dvdrental.public.rental AS rental
 LEFT JOIN dvdrental.public.customer ON
     rental.customer_id = customer.customer_id
