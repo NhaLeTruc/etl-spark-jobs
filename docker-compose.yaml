@@ -232,6 +232,20 @@ services:
     networks:
       - lakehouse_network
 
+  #################
+  ## Clean Codes ##
+  #################
+  tests:
+    extends:
+      service: spark-master
+    command: nose2 --with-coverage --coverage-report xml --coverage-report html -v --fail-fast
+
+  quality:
+    extends:
+      service: spark-master
+    command: ./scripts/code-lints.sh
+
+
 networks:
   lakehouse_network:
     driver: bridge
