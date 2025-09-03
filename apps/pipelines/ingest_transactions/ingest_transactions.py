@@ -127,7 +127,6 @@ class GoldIngestTransPipeline(BaseDataPipeline):
 
         df = transforms_gold_transactions(
             df=df,
-            report_dt=self.as_of_date_fmt(),
         )
 
         minio_write(

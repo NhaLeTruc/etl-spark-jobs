@@ -89,27 +89,31 @@ def transforms_silver_transactions(
 
 def transforms_gold_transactions(
     df: DataFrame,
-    report_dt: str,
 ) -> DataFrame:
     """
     Silver data is transformed into gold data through:
         curating into dedicated business divsion's aggregated views.
-            1. Remove film which length is shorter than 90 minutes.
-            2. Remove horror films.
-            3. Keep only customers in relevant cities.
-            4. Fill in NA values with DWH compliant string.
-            5. Map columns' name to DWH compliant column names.
-            6. Add report date.
-            7. Cast all values in DataFrame as string.
+            1. Remove unwanted columns.
+            2. Remove film which length is shorter than 90 minutes.
+            3. Remove horror films.
+            4. Keep only customers in relevant cities.
+            5-6. Fill in NA and blank values with DWH compliant string.
+            7. Map columns' name to DWH compliant column names.
+            8. Cast all values in DataFrame as string.
     """
-    df = df.where(col("length") > 90) \
+    df = df.drop(
+                "last_rental_update",
+                "last_customer_update",
+                "last_address_update",
+                "last_inventory_update"
+            ) \
+            .where(col("length") > 90) \
             .where(col("category_name") != "Horror") \
             .where(col("city").isin(["Aurora", "London", "Saint-Denis", "Cape Coral", "Molodetno", "Tanza", "Changzhou", "Ourense (Orense)"])) \
-            .fillna({"postal_code": "Not Applicable"}) \
+            .replace("", None) \
+            .fillna({"postal_code": "Not Applicable", "address2": "Not Applicable"}) \
             .select([col(c).alias(ops_dwh_transactions_map.get(c, c)) for c in df.columns]) \
-            .withColumn("report_date", lit(report_dt)) \
             .select([col(c).cast("string") for c in df.columns]) \
             
-    # TODO: Rename columns to gold standard.
 
     return df
