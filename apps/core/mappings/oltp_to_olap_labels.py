@@ -40,4 +40,6 @@ ops_dwh_transactions_map = {
     "last_update": "filmUpdate",
     "special_features": "filmFeatures",
     "fulltext": "filmFulltext",
+    "report_date": "reportDate",
+    "partition_date": "partitionDate",
 }

@@ -93,27 +93,30 @@ def transforms_gold_transactions(
     """
     Silver data is transformed into gold data through:
         curating into dedicated business divsion's aggregated views.
-            1. Remove unwanted columns.
-            2. Remove film which length is shorter than 90 minutes.
-            3. Remove horror films.
-            4. Keep only customers in relevant cities.
-            5-6. Fill in NA and blank values with DWH compliant string.
-            7. Map columns' name to DWH compliant column names.
-            8. Cast all values in DataFrame as string.
+            1. Remove film which length is shorter than 90 minutes.
+            2. Remove horror films.
+            3. Keep only customers in relevant cities.
+            4-5. Fill in NA and blank values with DWH compliant string.
+            6. Map columns' name to DWH compliant column names.
+            7. Cast all values in DataFrame as string.
+            8. Remove unwanted columns.
+            9. Relabel lakehouse's namings with datawarehouse's.
+    Arg:
+        df: Spark Dataframe input
+    Return:
+        A Spark Dataframe       
     """
-    df = df.drop(
-                "last_rental_update",
-                "last_customer_update",
-                "last_address_update",
-                "last_inventory_update"
-            ) \
-            .where(col("length") > 90) \
+    df = df.where(col("length") > 90) \
             .where(col("category_name") != "Horror") \
             .where(col("city").isin(["Aurora", "London", "Saint-Denis", "Cape Coral", "Molodetno", "Tanza", "Changzhou", "Ourense (Orense)"])) \
             .replace("", None) \
             .fillna({"postal_code": "Not Applicable", "address2": "Not Applicable"}) \
-            .select([col(c).alias(ops_dwh_transactions_map.get(c, c)) for c in df.columns]) \
             .select([col(c).cast("string") for c in df.columns]) \
-            
+            .drop(
+                "last_rental_update",
+                "last_customer_update",
+                "last_address_update",
+                "last_inventory_update",
+            )
 
-    return df
+    return df.select([col(c).alias(ops_dwh_transactions_map.get(c, c)) for c in df.columns])

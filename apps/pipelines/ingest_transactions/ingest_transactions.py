@@ -132,7 +132,7 @@ class GoldIngestTransPipeline(BaseDataPipeline):
         minio_write(
             df=df,
             path=bucket_house,
-            partition_cols=["partition_date"],
+            partition_cols=["partitionDate"],
             options={
                 "compression": "gzip",
             }
