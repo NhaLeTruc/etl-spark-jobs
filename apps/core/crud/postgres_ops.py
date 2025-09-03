@@ -98,7 +98,9 @@ def ops_write(
         "password": config.password,
         "driver": config.driver,
         "dbtable": dbtable,
-    }.update(options)
+    }
+
+    jdbc_options |= options
 
     try:
         df.write.format("jdbc").options(**jdbc_options).mode(mode).save()
