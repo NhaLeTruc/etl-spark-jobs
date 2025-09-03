@@ -6,13 +6,32 @@ import logging
 import unittest
 
 # Internals
-from apps.core.utils import cal_partition_dt, read_module_file
+from apps.core.utils import (
+    cal_partition_dt, 
+    read_module_file,
+    get_or_create_spark_session,
+)
 
 
 # Configure logging to console
 logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(name)s:%(message)s')
 
 class TestUtils(unittest.TestCase):
+
+    def test_get_or_create_spark_session(self):
+        logger = logging.getLogger(__name__)
+        logger.info("\n[UNITTEST].[Utils].[function] get_or_create_spark_session [SUCCESS]\n")
+
+        spark = get_or_create_spark_session(appname="unittest get_or_create_spark_session")
+        data = [("Alice", 1), ("Bob", 2)]
+        df = spark.createDataFrame(data, ["name", "age"])
+
+        result_df = df.filter(df.age > 1)
+        
+        self.assertEqual(result_df.count(), 1)
+        self.assertEqual(result_df.collect()[0]["name"], "Bob")
+        spark.stop()
+        
 
     def test_cal_partition_dt(self):
         logger = logging.getLogger(__name__)
