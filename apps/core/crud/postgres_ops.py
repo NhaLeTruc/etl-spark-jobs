@@ -8,8 +8,8 @@ import traceback
 from datetime import datetime
 from typing import Optional
 
-from apps.core.conf.jdbc import JdbcConfig
-from apps.core.utils import get_or_create_spark_session
+from core.conf.jdbc import JdbcConfig
+from core.utils import get_or_create_spark_session
 from pyspark.sql import DataFrame
 
 

@@ -36,7 +36,7 @@ test_pipelines:
 	make spark_submit
 
 code_quality:
-	ruff check --fix apps/test
+	ruff check --fix apps
 	mypy --pretty apps
 
 run_scaled:

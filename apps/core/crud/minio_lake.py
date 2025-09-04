@@ -5,8 +5,8 @@ Repository for minio-lake related methods
 
 from typing import Optional
 
-from apps.core.constants import StorageFormats
-from apps.core.utils import get_or_create_spark_session
+from core.constants import StorageFormats
+from core.utils import get_or_create_spark_session
 from pyspark.sql import DataFrame
 
 
@@ -14,7 +14,7 @@ def minio_write(
     df: DataFrame,
     path: str,
     partition_cols: Optional[list[str]] = None,
-    format_type: StorageFormats = StorageFormats.MINIO_STORAGE_FORMAT.value,
+    format_type: str = StorageFormats.MINIO_STORAGE_FORMAT.value,
     mode: str = "overwrite",
     options: dict = {},
 ) -> None:
@@ -38,7 +38,7 @@ def minio_read(
     path: str,
     sql: Optional[str] = None,
     table_name: str = "MINIO",
-    format_type: StorageFormats = StorageFormats.MINIO_STORAGE_FORMAT.value,
+    format_type: str = StorageFormats.MINIO_STORAGE_FORMAT.value,
 ) -> DataFrame:
     """
     Read data in minio-lake bucket path as a Spark DataFrame
