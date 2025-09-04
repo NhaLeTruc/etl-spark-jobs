@@ -2,9 +2,9 @@
 Repository of reusable utility methods
 """
 # Externals
-import os, json, zipfile
+import zipfile
 from os.path import abspath, dirname, join
-from typing import Any, Optional, Dict, List
+from typing import Optional, Dict, List
 from datetime import datetime, timedelta
 from pyspark.sql import SparkSession
 

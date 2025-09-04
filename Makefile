@@ -1,6 +1,8 @@
 # Docker Compose wrapper
 DC = docker compose
 
+.PHONY: up down deep_down deep_clean apps_zip spark_submit run_scaled
+
 up:
 	sudo $(DC) up -d
 
@@ -22,11 +24,22 @@ apps_zip:
 	cp apps/pipelines/ingest_transactions/main.py spark/apps/
 
 spark_submit:
-	sudo docker exec spark-master spark-submit \
+	sudo docker exec -w /opt/bitnami/spark/apps spark-master spark-submit \
 		--master spark://spark-master:7077 \
 		--deploy-mode client \
 		--py-files apps.zip \
 		main.py
 
-run-scaled:
+test_pipelines:
+	make up
+	make apps_zip
+	make spark_submit
+
+code_quality:
+	ruff check --fix apps/test
+	ruff format apps/test
+	mypy --pretty apps
+	sqlfluff fix --show-lint-violations apps/core/crud/sql/
+
+run_scaled:
 	make down && docker-compose up --scale spark-worker=3

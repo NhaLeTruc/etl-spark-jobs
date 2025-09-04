@@ -2,7 +2,7 @@
 Unlikely to change values
 """
 # Externals
-from enum import Enum, unique
+from enum import Enum
 
 
 class DateTimeFormat(Enum):
