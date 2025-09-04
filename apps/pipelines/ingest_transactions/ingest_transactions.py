@@ -22,7 +22,6 @@ from pipelines.ingest_transactions.trans_tranforms import (
     transforms_silver_transactions,
 )
 
-
 ops_config = DockerEnvJdbcConfig(config=DOCKER_ENV.get("postgres"))
 
 #########################################################################

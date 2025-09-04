@@ -5,9 +5,10 @@ Repository for minio-lake related methods
 
 from typing import Optional
 
+from pyspark.sql import DataFrame
+
 from core.constants import StorageFormats
 from core.utils import get_or_create_spark_session
-from pyspark.sql import DataFrame
 
 
 def minio_write(
