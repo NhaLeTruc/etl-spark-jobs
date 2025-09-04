@@ -1,13 +1,12 @@
-# Externals
-from datetime import date
-from pyspark.sql import DataFrame
-from pyspark.sql.functions import col, regexp_replace, lit, to_date
 
-# Internals
+from datetime import date
+
 from apps.core.conf.jdbc import JdbcConfig
-from apps.core.mappings.oltp_to_olap_labels import ops_dwh_transactions_map
-from apps.core.utils import read_module_file, cal_partition_dt
 from apps.core.crud.postgres_ops import ops_read
+from apps.core.mappings.oltp_to_olap_labels import ops_dwh_transactions_map
+from apps.core.utils import cal_partition_dt, read_module_file
+from pyspark.sql import DataFrame
+from pyspark.sql.functions import col, lit, regexp_replace, to_date
 
 
 def extracts_bronze_transactions(
@@ -38,8 +37,8 @@ def extracts_bronze_transactions(
         "crud/sql/trans_extracts.sql"
     ).format(
         schema_name= schema_name,
-        partition_column=partition_column, 
-        from_dt=from_dt, 
+        partition_column=partition_column,
+        from_dt=from_dt,
         to_dt=to_dt
     )
 
@@ -67,7 +66,7 @@ def transforms_silver_transactions(
     report_dt: str,
 ) -> DataFrame:
     """
-    Bronze data is transformed into silver data through: 
+    Bronze data is transformed into silver data through:
         cleaning.
         business logics validating.
         structured as atomic transactions for easy analysis.
@@ -77,13 +76,12 @@ def transforms_silver_transactions(
             4. Add report date.
             5. Cast all values in DataFrame as string.
     """
-    df = df.where(col("activebool") == col("active")) \
+    return df.where(col("activebool") == col("active")) \
             .where(col("release_year") < date.today().year) \
             .where(regexp_replace(col("title"), "\\s+", "").rlike("^[a-zA-Z0-9]{3,60}$")) \
             .select([col(c).cast("string") for c in df.columns]) \
             .withColumn("report_date", lit(report_dt)) \
 
-    return df
 
 
 def transforms_gold_transactions(
@@ -103,7 +101,7 @@ def transforms_gold_transactions(
     Arg:
         df: Spark Dataframe input
     Return:
-        A Spark Dataframe       
+        A Spark Dataframe
     """
     df = df.where(col("length") > 90) \
             .where(col("category_name") != "Horror") \

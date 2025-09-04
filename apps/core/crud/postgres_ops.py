@@ -2,16 +2,15 @@
 pyspark postgres db connector
 """
 
-# Externals
+
 import inspect
 import traceback
 from datetime import datetime
 from typing import Optional
-from pyspark.sql import DataFrame
 
-# Internals
 from apps.core.conf.jdbc import JdbcConfig
 from apps.core.utils import get_or_create_spark_session
+from pyspark.sql import DataFrame
 
 
 def ops_read(
@@ -58,7 +57,7 @@ def ops_read(
             raise ValueError(
                 "In parallel mode, lower_bound and upper_bound must be set"
             )
-        
+
         jdbc_options.update(
             {
                 "partitionColumn": partition_column,

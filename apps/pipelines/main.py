@@ -1,9 +1,9 @@
+from apps.core.utils import get_or_create_spark_session
 from apps.pipelines.ingest_transactions.ingest_transactions import (
     BronzeIngestTransPipeline,
-    SilverIngestTransPipeline,
     GoldIngestTransPipeline,
+    SilverIngestTransPipeline,
 )
-from apps.core.utils import get_or_create_spark_session
 
 if __name__ == "__main__":
     bronze = BronzeIngestTransPipeline()

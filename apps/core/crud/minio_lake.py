@@ -2,19 +2,18 @@
 Repository for minio-lake related methods
 """
 
-# Externals
-from typing import List, Optional
-from pyspark.sql import DataFrame
 
-# Internals
-from apps.core.utils import get_or_create_spark_session
+from typing import Optional
+
 from apps.core.constants import StorageFormats
+from apps.core.utils import get_or_create_spark_session
+from pyspark.sql import DataFrame
 
 
 def minio_write(
     df: DataFrame,
     path: str,
-    partition_cols: Optional[List[str]] = None,
+    partition_cols: Optional[list[str]] = None,
     format_type: StorageFormats = StorageFormats.MINIO_STORAGE_FORMAT.value,
     mode: str = "overwrite",
     options: dict = {},

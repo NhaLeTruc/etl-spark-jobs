@@ -1,11 +1,10 @@
 """
 Logging
 """
-# Externals
+
 import inspect
 from typing import Optional
 
-# Internals
 from apps.core.utils import get_or_create_spark_session
 
 
@@ -14,7 +13,7 @@ class LoggerProvider:
         spark = get_or_create_spark_session()
         logger = spark._jvm.org.apache.log4j
         return logger.LogManager.getLogger("etl_logger")
-    
+
 
 class LoggerMethods(LoggerProvider):
     """
@@ -30,7 +29,7 @@ class LoggerMethods(LoggerProvider):
         Return the name of the main caller function using the stack.
         """
         return inspect.stack()[3][3]
-    
+
 
     def set_message(self, custom_message):
         """
@@ -38,13 +37,8 @@ class LoggerMethods(LoggerProvider):
         """
         caller_func = self.__get_calling_func_name() or ""
 
-        if custom_message:
-            message = f"{custom_message} [{caller_func}]"
-        else:
-            message = f"[{caller_func}]"
+        return f"{custom_message} [{caller_func}]" if custom_message else f"[{caller_func}]"
 
-        return message
-    
 
     def info(self, message: Optional[str] = None):
         """

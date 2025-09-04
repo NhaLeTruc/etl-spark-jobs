@@ -1,8 +1,9 @@
 """
 Custom configuration for spark loggings
 """
-# Externals
-from typing import Any, Dict, List, Protocol, Union
+
+from typing import Any, Protocol, Union
+
 from pyspark.sql import DataFrame, F
 
 
@@ -16,9 +17,9 @@ class AnalysisCallableType(Protocol):
 
 class LoggingConfig:
     enable_log_and_analyze = False
-    logs: List[Dict[str, Any]] = []
+    logs: list[dict[str, Any]] = []
 
-    analysis_config: Dict[str, Dict[str, AnalysisCallableType]] = {
+    analysis_config: dict[str, dict[str, AnalysisCallableType]] = {
         "counts": {"operation": lambda df, **kwargs: f"Row Count: {df.count()}"},
         "aggregate": {
             "operation": lambda df, **kwargs: df.selectExpr(kwargs["expression"])
