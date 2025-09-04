@@ -17,11 +17,6 @@ from apps.core.conf.storage import (
     bucket_lakehouse
 )
 from apps.core.conf.jdbc import DockerEnvJdbcConfig
-from apps.core.mappings.ingest_transactions_dqc import (
-    bronze_dqc_json,
-    silver_dqc_json,
-    gold_dqc_json,
-)
 from apps.pipelines.ingest_transactions.trans_tranforms import (
     extracts_bronze_transactions,
     transforms_gold_transactions,

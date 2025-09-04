@@ -22,10 +22,6 @@ python3 -m unittest discover apps/test
 python3 -m unittest apps.test.test_pipeline
 # core.utils unit tests only
 python3 -m unittest apps.test.test_utils
-
-docker compose run --rm tests
-docker compose run --rm tests apps.test.test_pipeline
-docker compose run --rm quality
 ```
 
 Create and deploy zip files for `apps/core` and `apps/pipelines`

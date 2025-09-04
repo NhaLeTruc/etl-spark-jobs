@@ -4,7 +4,6 @@ from pyspark.sql import DataFrame
 from pyspark.sql.functions import col, regexp_replace, lit, to_date
 
 # Internals
-from apps.core.conf.storage import DOCKER_ENV
 from apps.core.conf.jdbc import JdbcConfig
 from apps.core.mappings.oltp_to_olap_labels import ops_dwh_transactions_map
 from apps.core.utils import read_module_file, cal_partition_dt
