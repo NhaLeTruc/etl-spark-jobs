@@ -4,7 +4,8 @@ Custom configuration for spark loggings
 
 from typing import Any, Protocol, Union
 
-from pyspark.sql import DataFrame, F
+from pyspark.sql import DataFrame
+from pyspark.sql import functions as F
 
 
 class AnalysisCallableType(Protocol):

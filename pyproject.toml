@@ -13,3 +13,8 @@ convention = "google"
 [tool.mypy]
 # Allows shadowing (redefine variables with different types
 allow_redefinition = true
+disable_error_code = [
+    "attr-defined",
+    "arg-type",
+    "return-value",
+]

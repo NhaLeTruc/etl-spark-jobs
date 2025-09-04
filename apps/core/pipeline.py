@@ -2,8 +2,8 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 
-from apps.core.constants import DateTimeFormat
-from apps.core.utils import get_or_create_spark_session
+from core.constants import DateTimeFormat
+from core.utils import get_or_create_spark_session
 from pyspark.sql import SparkSession
 
 

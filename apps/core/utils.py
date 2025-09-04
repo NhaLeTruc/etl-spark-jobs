@@ -7,9 +7,9 @@ from datetime import datetime, timedelta
 from os.path import abspath, dirname, join
 from typing import Optional
 
-from apps.core.conf.minio_config import DockerEnvMinioConfig
-from apps.core.conf.storage import DOCKER_ENV
-from apps.core.constants import DateTimeFormat
+from core.conf.minio_config import DockerEnvMinioConfig
+from core.conf.storage import DOCKER_ENV
+from core.constants import DateTimeFormat
 from pyspark.sql import SparkSession
 
 

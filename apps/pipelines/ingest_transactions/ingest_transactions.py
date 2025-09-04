@@ -4,29 +4,26 @@ main file of pipeline object "ingest_transactions"
 
 from datetime import timedelta
 
-from apps.core.conf.jdbc import DockerEnvJdbcConfig
-from apps.core.conf.storage import (
+from core.conf.jdbc import DockerEnvJdbcConfig
+from core.conf.storage import (
     DOCKER_ENV,
     OPS_SCHEMAS,
     bucket_house,
     bucket_lake,
     bucket_lakehouse,
 )
-from apps.core.constants import DateTimeFormat
-from apps.core.crud.minio_lake import minio_read, minio_write
-from apps.core.crud.postgres_ops import ops_write
-from apps.core.pipeline import BaseDataPipeline
-from apps.pipelines.ingest_transactions.trans_tranforms import (
+from core.constants import DateTimeFormat
+from core.crud.minio_lake import minio_read, minio_write
+from core.crud.postgres_ops import ops_write
+from core.pipeline import BaseDataPipeline
+from pipelines.ingest_transactions.trans_tranforms import (
     extracts_bronze_transactions,
     transforms_gold_transactions,
     transforms_silver_transactions,
 )
 
-# Variables
-# run_dt = date.today().strftime("%Y-%m-%d")
-run_dt = "2005-08-24"
-ops_config = DockerEnvJdbcConfig(config=DOCKER_ENV.get("postgres"))
 
+ops_config = DockerEnvJdbcConfig(config=DOCKER_ENV.get("postgres"))
 
 #########################################################################
 ## BRONZE
@@ -35,7 +32,7 @@ class BronzeIngestTransPipeline(BaseDataPipeline):
 
     def __init__(
         self,
-        as_of_date: str = run_dt,
+        as_of_date: str,
         lookback_days: int = 100,
     ):
         super().__init__(as_of_date)
@@ -74,7 +71,7 @@ class SilverIngestTransPipeline(BaseDataPipeline):
 
     def __init__(
         self,
-        as_of_date: str = run_dt,
+        as_of_date: str,
     ):
         super().__init__(as_of_date)
 
@@ -107,7 +104,7 @@ class GoldIngestTransPipeline(BaseDataPipeline):
 
     def __init__(
         self,
-        as_of_date: str = run_dt,
+        as_of_date: str,
     ):
         super().__init__(as_of_date)
 
