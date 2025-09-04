@@ -1,0 +1,15 @@
+services:
+  #################
+  ## Clean Codes ##
+  #################
+  tests:
+    extends:
+      file: docker-compose.yaml
+      service: spark-master
+    command: nose2 --with-coverage --coverage-report xml --coverage-report html -v --fail-fast
+
+  quality:
+    extends:
+      file: docker-compose.yaml
+      service: spark-master
+    command: ./scripts/code-lints.sh

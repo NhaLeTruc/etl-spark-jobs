@@ -15,7 +15,7 @@ RUN curl -L https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runt
 WORKDIR ${JUPYTER_HOME}
 
 COPY ./scripts/ ./scripts/
-COPY ./jupyter/requirements.txt ./requirements.txt
+COPY ./requirements.txt ./requirements.txt
 RUN apt update && apt install tar git nano -y \
     && pip install -r requirements.txt
 
