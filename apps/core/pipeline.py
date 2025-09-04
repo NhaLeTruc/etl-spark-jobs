@@ -2,9 +2,10 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 
+from pyspark.sql import SparkSession
+
 from core.constants import DateTimeFormat
 from core.utils import get_or_create_spark_session
-from pyspark.sql import SparkSession
 
 
 class BaseDataPipeline(ABC):

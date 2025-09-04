@@ -7,10 +7,11 @@ from datetime import datetime, timedelta
 from os.path import abspath, dirname, join
 from typing import Optional
 
+from pyspark.sql import SparkSession
+
 from core.conf.minio_config import DockerEnvMinioConfig
 from core.conf.storage import DOCKER_ENV
 from core.constants import DateTimeFormat
-from pyspark.sql import SparkSession
 
 
 def get_or_create_spark_session(
