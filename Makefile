@@ -37,9 +37,7 @@ test_pipelines:
 
 code_quality:
 	ruff check --fix apps/test
-	ruff format apps/test
 	mypy --pretty apps
-	sqlfluff fix --show-lint-violations apps/core/crud/sql/
 
 run_scaled:
 	make down && docker-compose up --scale spark-worker=3

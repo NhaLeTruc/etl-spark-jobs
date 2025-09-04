@@ -1,22 +1,21 @@
 """
 main file of pipeline object "ingest_transactions"
 """
-# Externals
+
 from datetime import timedelta
 
-# Internals
-from apps.core.constants import DateTimeFormat
-from apps.core.pipeline import BaseDataPipeline
-from apps.core.crud.minio_lake import minio_write, minio_read
-from apps.core.crud.postgres_ops import ops_write
-from apps.core.conf.storage import (
-    DOCKER_ENV, 
-    OPS_SCHEMAS,
-    bucket_lake,
-    bucket_house,
-    bucket_lakehouse
-)
 from apps.core.conf.jdbc import DockerEnvJdbcConfig
+from apps.core.conf.storage import (
+    DOCKER_ENV,
+    OPS_SCHEMAS,
+    bucket_house,
+    bucket_lake,
+    bucket_lakehouse,
+)
+from apps.core.constants import DateTimeFormat
+from apps.core.crud.minio_lake import minio_read, minio_write
+from apps.core.crud.postgres_ops import ops_write
+from apps.core.pipeline import BaseDataPipeline
 from apps.pipelines.ingest_transactions.trans_tranforms import (
     extracts_bronze_transactions,
     transforms_gold_transactions,
@@ -35,8 +34,8 @@ ops_config = DockerEnvJdbcConfig(config=DOCKER_ENV.get("postgres"))
 class BronzeIngestTransPipeline(BaseDataPipeline):
 
     def __init__(
-        self, 
-        as_of_date: str = run_dt, 
+        self,
+        as_of_date: str = run_dt,
         lookback_days: int = 100,
     ):
         super().__init__(as_of_date)
@@ -57,7 +56,7 @@ class BronzeIngestTransPipeline(BaseDataPipeline):
             partition_column="rental_date",
             num_partitions=5,
         )
-        
+
         minio_write(
             df=df,
             path=bucket_lake,
@@ -74,7 +73,7 @@ class BronzeIngestTransPipeline(BaseDataPipeline):
 class SilverIngestTransPipeline(BaseDataPipeline):
 
     def __init__(
-        self, 
+        self,
         as_of_date: str = run_dt,
     ):
         super().__init__(as_of_date)
@@ -90,7 +89,7 @@ class SilverIngestTransPipeline(BaseDataPipeline):
             df=df,
             report_dt=self.as_of_date_fmt(),
         )
-        
+
         minio_write(
             df=df,
             path=bucket_lakehouse,
@@ -107,7 +106,7 @@ class SilverIngestTransPipeline(BaseDataPipeline):
 class GoldIngestTransPipeline(BaseDataPipeline):
 
     def __init__(
-        self, 
+        self,
         as_of_date: str = run_dt,
     ):
         super().__init__(as_of_date)

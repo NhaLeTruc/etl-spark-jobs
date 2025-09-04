@@ -1,0 +1,15 @@
+[tool.ruff]
+src = ['apps']
+line-length = 100
+
+[tool.ruff.lint]
+# See https://docs.astral.sh/ruff/rules/
+select = ["W", "F", "UP", "SIM", "I", "N", "E", "INP", "RET", "C4"]
+ignore = ["E501", "INP001", "N812"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+# Allows shadowing (redefine variables with different types
+allow_redefinition = true

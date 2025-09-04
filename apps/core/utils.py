@@ -1,22 +1,21 @@
 """
 Repository of reusable utility methods
 """
-# Externals
-import zipfile
-from os.path import abspath, dirname, join
-from typing import Optional, Dict, List
-from datetime import datetime, timedelta
-from pyspark.sql import SparkSession
 
-# Internals
+import zipfile
+from datetime import datetime, timedelta
+from os.path import abspath, dirname, join
+from typing import Optional
+
 from apps.core.conf.minio_config import DockerEnvMinioConfig
 from apps.core.conf.storage import DOCKER_ENV
 from apps.core.constants import DateTimeFormat
+from pyspark.sql import SparkSession
 
 
 def get_or_create_spark_session(
     appname: str="etl_job",
-    configs: Dict={},
+    configs: dict={},
     stage_description: Optional[str]=None,
 ) -> SparkSession:
     """
@@ -27,7 +26,7 @@ def get_or_create_spark_session(
     minio_conf = DockerEnvMinioConfig(
         config=DOCKER_ENV.get("minio-lake")
     )
-        
+
     configs = configs | {
         'spark.sql.catalog.nessie.s3.endpoint': minio_conf.endpoint,
         'spark.hadoop.fs.s3a.endpoint': minio_conf.endpoint,
@@ -69,7 +68,7 @@ def read_module_file(
             f"{core_dir}/{file_path}", "r"
         ) as file:
             return file.read().decode(encoding="utf-8-sig")
- 
+
     with open(destination_path, encoding="utf-8-sig") as file:
         return file.read().replace("\n", " ").rstrip()
 
@@ -79,7 +78,7 @@ def cal_partition_dt(
     to_dt: str,
     num_partitions: int,
     date_format: str = DateTimeFormat.ISO_DATE_FMT.value
-) -> List[str]:
+) -> list[str]:
     """
     Suggest partition dates for Spark parallel operations.
 
@@ -93,9 +92,9 @@ def cal_partition_dt(
     """
     to_dt = datetime.strptime(to_dt, date_format)
     from_dt = datetime.strptime(from_dt, date_format)
-    
+
     gap_days = to_dt - from_dt
-    
+
     parition_size = gap_days / num_partitions
 
     if parition_size.days < 1:
