@@ -19,22 +19,15 @@ deep_clean:
 	sudo docker builder prune -fa
 
 apps_zip:
-	zip -r apps.zip apps/*
+	zip -r apps.zip apps/
 	mv apps.zip spark/apps/
-	cp apps/pipelines/main.py spark/apps/
-
-build:
-	python3 -m build
-
-deploy_dist:
-	cp dist/*.whl spark/apps/artifact.whl
 	cp apps/pipelines/main.py spark/apps/
 
 spark_submit:
 	sudo docker exec -w /opt/bitnami/spark/apps spark-master spark-submit \
 		--master spark://spark-master:7077 \
 		--deploy-mode client \
-		--py-files artifact.whl \
+		--py-files apps.zip \
 		main.py
 
 test_pipelines:
@@ -44,6 +37,13 @@ test_pipelines:
 code_quality:
 	ruff check --fix apps
 	mypy --pretty apps
+
+build:
+	python3 -m build
+
+deploy_dist:
+	cp dist/*.whl spark/apps/artifact.whl
+	cp apps/pipelines/main.py spark/apps/
 
 run_scaled:
 	make down && docker-compose up --scale spark-worker=3

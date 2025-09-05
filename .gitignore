@@ -1,7 +1,6 @@
 # Environments
 *.env
 *.DS_Store
-tmp/
 
 # Docker
 superset_data/
@@ -9,8 +8,6 @@ mariadb-data/
 minio-data/
 
 # Logs
-airflow/logs
-spark/logs
 **/*.log
 
 # Data
@@ -26,8 +23,11 @@ __init__.py
 
 # Jupyter
 .Trash*
-# **/*.ipynb
+**/*.ipynb
 
 # VSCode
 .vscode
+
+# Others
+tmp/
 hooks/
