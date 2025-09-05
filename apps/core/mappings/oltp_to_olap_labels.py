@@ -4,6 +4,7 @@
     ...
 }
 """
+
 ops_dwh_transactions_map = {
     "rental_id": "transactionId",
     "rental_date": "transactionDate",

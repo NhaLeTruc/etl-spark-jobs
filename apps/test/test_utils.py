@@ -4,7 +4,7 @@ Unit tests for utils
 import logging
 import unittest
 
-from core.utils import (
+from apps.core.utils import (
     cal_partition_dt,
     read_module_file,
 )

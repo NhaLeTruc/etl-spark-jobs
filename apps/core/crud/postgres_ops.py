@@ -2,15 +2,14 @@
 pyspark postgres db connector
 """
 
-
 import inspect
 import traceback
 from datetime import datetime
 
 from pyspark.sql import DataFrame
 
-from core.conf.jdbc import JdbcConfig
-from core.utils import get_or_create_spark_session
+from apps.core.conf.jdbc import JdbcConfig
+from apps.core.utils import get_or_create_spark_session
 
 
 def ops_read(

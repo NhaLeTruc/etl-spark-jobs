@@ -4,7 +4,7 @@ Logging
 
 import inspect
 
-from core.utils import get_or_create_spark_session
+from apps.core.utils import get_or_create_spark_session
 
 
 class LoggerProvider:

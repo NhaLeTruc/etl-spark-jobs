@@ -1,5 +1,5 @@
-from core.utils import get_or_create_spark_session
-from pipelines.ingest_transactions.ingest_transactions import (
+from apps.core.utils import get_or_create_spark_session
+from apps.pipelines.ingest_transactions.ingest_transactions import (
     BronzeIngestTransPipeline,
     GoldIngestTransPipeline,
     SilverIngestTransPipeline,

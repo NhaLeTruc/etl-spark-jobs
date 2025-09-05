@@ -19,8 +19,8 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["apps"]
-include = ["core","pipelines"]
-exclude = ["tests"]
+include = ["core*","pipelines*"]
+exclude = ["tests*"]
 namespaces = false
 
 # [tool.setuptools]
