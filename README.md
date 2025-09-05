@@ -75,17 +75,17 @@ sudo docker cp <CONTAINER_ID>:</path/to/file/file.ext> </path/on/local/>
 curl -v minio-lake:9000 2>&1 | grep -o -m 1 "(.*)." | tr -d '() '
 
 # Load postgres example database dvdrental at https://neon.com/postgresql/postgresql-getting-started/postgresql-sample-database
-scp dvdrental.zip debian@192.168.1.11:/home/debian/
+docker cp apps/test/data/dvdrental.zip postgres-metadata:/
+
+apt update
+
+apt install pv unzip
 
 unzip dvdrental.zip
 
-pg_restore -U postgres -d dvdrental
-
-psql -h <hostname> -p <port> -U <username> -d <database>
-
-apt install pv
-
 pv dvdrental.tar | pg_restore -U postgres_usr -d dvdrental
+
+psql -U postgres_usr -d dvdrental
 ```
 
 ## Deployment
@@ -123,5 +123,5 @@ zip -r -j apps.zip apps/*
 
 mv apps.zip spark/apps/
 
-spark-submit --master spark://spark-master:7077 --deploy-mode client --py-files apps.zip main.py
+spark-submit --master spark://spark-master:7077 --deploy-mode client --py-files artifact.whl main.py
 ```

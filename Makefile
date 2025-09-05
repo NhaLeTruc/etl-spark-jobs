@@ -24,17 +24,17 @@ apps_zip:
 	cp apps/pipelines/main.py spark/apps/
 
 build:
-	python -m build
+	python3 -m build
 
 deploy_dist:
-	cp -r dist spark/apps/
+	cp dist/*.whl spark/apps/artifact.whl
 	cp apps/pipelines/main.py spark/apps/
 
 spark_submit:
 	sudo docker exec -w /opt/bitnami/spark/apps spark-master spark-submit \
 		--master spark://spark-master:7077 \
 		--deploy-mode client \
-		--py-files simple_pyspark_project-0.1.0-py3-none-any.whl \
+		--py-files artifact.whl \
 		main.py
 
 test_pipelines:

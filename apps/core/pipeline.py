@@ -4,8 +4,8 @@ from datetime import datetime
 
 from pyspark.sql import SparkSession
 
-from core.constants import DateTimeFormat
-from core.utils import get_or_create_spark_session
+from apps.core.constants import DateTimeFormat
+from apps.core.utils import get_or_create_spark_session
 
 
 class BaseDataPipeline(ABC):

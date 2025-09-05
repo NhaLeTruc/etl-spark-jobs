@@ -2,7 +2,6 @@
 minio config objects
 """
 
-
 import os
 
 

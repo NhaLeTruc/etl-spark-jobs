@@ -2,12 +2,10 @@
 Repository for minio-lake related methods
 """
 
-
-
 from pyspark.sql import DataFrame
 
-from core.constants import StorageFormats
-from core.utils import get_or_create_spark_session
+from apps.core.constants import StorageFormats
+from apps.core.utils import get_or_create_spark_session
 
 
 def minio_write(

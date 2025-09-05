@@ -2,7 +2,6 @@
 JDBC config objects
 """
 
-
 import os
 
 
