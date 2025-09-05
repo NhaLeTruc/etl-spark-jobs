@@ -8,6 +8,9 @@ line-length = 100
 select = ["W", "F", "UP", "SIM", "I", "N", "E", "INP", "RET", "C4"]
 ignore = ["E501", "INP001", "N812"]
 
+[tool.ruff.lint.isort]
+known-first-party = ["apps"]
+
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
