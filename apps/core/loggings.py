@@ -3,7 +3,6 @@ Logging
 """
 
 import inspect
-from typing import Optional
 
 from core.utils import get_or_create_spark_session
 
@@ -19,7 +18,7 @@ class LoggerMethods(LoggerProvider):
     """
     Class to implement different logging methods
     """
-    def __init__(self, custom_message: Optional[str] = None):
+    def __init__(self, custom_message: str | None = None):
         super().__init__()
         self.custom_message = custom_message
 
@@ -40,7 +39,7 @@ class LoggerMethods(LoggerProvider):
         return f"{custom_message} [{caller_func}]" if custom_message else f"[{caller_func}]"
 
 
-    def info(self, message: Optional[str] = None):
+    def info(self, message: str | None = None):
         """
         Fuction used to log info
         """
@@ -50,7 +49,7 @@ class LoggerMethods(LoggerProvider):
 
 
 
-    def warn(self, message: Optional[str] = None):
+    def warn(self, message: str | None = None):
         """
         Function used to log a warning
         """
@@ -59,7 +58,7 @@ class LoggerMethods(LoggerProvider):
         logger.warn(format_message)
 
 
-    def error(self, message: Optional[str] = None):
+    def error(self, message: str | None = None):
         """
         Function used to log a error
         """

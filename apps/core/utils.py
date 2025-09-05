@@ -5,7 +5,6 @@ Repository of reusable utility methods
 import zipfile
 from datetime import datetime, timedelta
 from os.path import abspath, dirname, join
-from typing import Optional
 
 from pyspark.sql import SparkSession
 
@@ -17,7 +16,7 @@ from core.constants import DateTimeFormat
 def get_or_create_spark_session(
     appname: str="etl_job",
     configs: dict={},
-    stage_description: Optional[str]=None,
+    stage_description: str | None=None,
 ) -> SparkSession:
     """
     Get or create SparkSesion with additional configs other than those in spark-defaults.conf

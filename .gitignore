@@ -1,7 +1,7 @@
 # Environments
 *.env
 *.DS_Store
-test.py
+tmp/
 
 # Docker
 superset_data/
