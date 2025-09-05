@@ -1,8 +1,6 @@
 """
 Unit tests for utils
 """
-
-
 import logging
 import unittest
 
@@ -11,9 +9,8 @@ from core.utils import (
     read_module_file,
 )
 
-# Configure logging to console
+# Configure logging to console and packages paths
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
-
 
 class TestUtils(unittest.TestCase):
     def test_cal_partition_dt(self):

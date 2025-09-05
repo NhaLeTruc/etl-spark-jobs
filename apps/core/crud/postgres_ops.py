@@ -6,7 +6,6 @@ pyspark postgres db connector
 import inspect
 import traceback
 from datetime import datetime
-from typing import Optional
 
 from pyspark.sql import DataFrame
 
@@ -19,8 +18,8 @@ def ops_read(
     config: JdbcConfig,
     parallel: bool = False,
     partition_column: str = "CREATED_DATE",
-    lower_bound: Optional[str] = None,
-    upper_bound: Optional[str] = None,
+    lower_bound: str | None = None,
+    upper_bound: str | None = None,
     num_partitions: int = 10,
     fetch_size: int = 10_000,
 ) -> DataFrame:

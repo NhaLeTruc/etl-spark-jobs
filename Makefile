@@ -20,21 +20,25 @@ deep_clean:
 
 apps_zip:
 	zip -r apps.zip apps/*
-	zip -r core.zip apps/core/*
-	zip -r pipelines.zip apps/pipelines/*
-	mv apps.zip core.zip pipelines.zip spark/apps/
+	mv apps.zip spark/apps/
+	cp apps/pipelines/main.py spark/apps/
+
+build:
+	python -m build
+
+deploy_dist:
+	cp -r dist spark/apps/
 	cp apps/pipelines/main.py spark/apps/
 
 spark_submit:
 	sudo docker exec -w /opt/bitnami/spark/apps spark-master spark-submit \
 		--master spark://spark-master:7077 \
 		--deploy-mode client \
-		--py-files apps.zip \
+		--py-files simple_pyspark_project-0.1.0-py3-none-any.whl \
 		main.py
 
 test_pipelines:
-	make up
-	make apps_zip
+	make deploy_dist
 	make spark_submit
 
 code_quality:

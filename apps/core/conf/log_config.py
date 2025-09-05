@@ -2,7 +2,7 @@
 Custom configuration for spark loggings
 """
 
-from typing import Any, Protocol, Union
+from typing import Any, Protocol
 
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
@@ -12,7 +12,7 @@ class AnalysisCallableType(Protocol):
     """
     Type hint for callable in analysis_config dictionary
     """
-    def __call__(self, df: DataFrame, **kwargs) -> Union[str, DataFrame]:
+    def __call__(self, df: DataFrame, **kwargs) -> str | DataFrame:
         pass
 
 

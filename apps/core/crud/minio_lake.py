@@ -3,7 +3,6 @@ Repository for minio-lake related methods
 """
 
 
-from typing import Optional
 
 from pyspark.sql import DataFrame
 
@@ -14,7 +13,7 @@ from core.utils import get_or_create_spark_session
 def minio_write(
     df: DataFrame,
     path: str,
-    partition_cols: Optional[list[str]] = None,
+    partition_cols: list[str] | None = None,
     format_type: str = StorageFormats.MINIO_STORAGE_FORMAT.value,
     mode: str = "overwrite",
     options: dict = {},
@@ -37,7 +36,7 @@ def minio_write(
 
 def minio_read(
     path: str,
-    sql: Optional[str] = None,
+    sql: str | None = None,
     table_name: str = "MINIO",
     format_type: str = StorageFormats.MINIO_STORAGE_FORMAT.value,
 ) -> DataFrame:
