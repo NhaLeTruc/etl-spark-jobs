@@ -1,7 +1,7 @@
 # Docker Compose wrapper
 DC = docker compose
 
-.PHONY: up down deep_down deep_clean apps_zip spark_submit run_scaled
+.PHONY: up down deep_down deep_clean pg_dvd apps_zip spark_submit test_pipelines code_quality
 
 up:
 	sudo $(DC) up -d
@@ -18,6 +18,10 @@ deep_clean:
 	sudo docker network prune -f
 	sudo docker builder prune -fa
 
+pg_dvd:
+	sudo docker cp apps/test/data/dvdrental.zip postgres-metadata:/
+	sudo docker exec postgres-metadata bash -c "apt update; apt install pv unzip; unzip dvdrental.zip; pv dvdrental.tar | pg_restore -U postgres_usr -d dvdrental"
+
 apps_zip:
 	zip -r apps.zip apps/
 	mv apps.zip spark/apps/
@@ -31,19 +35,9 @@ spark_submit:
 		main.py
 
 test_pipelines:
-	make deploy_dist
+	make apps_zip
 	make spark_submit
 
 code_quality:
 	ruff check --fix apps
-	mypy --pretty apps
-
-build:
-	python3 -m build
-
-deploy_dist:
-	cp dist/*.whl spark/apps/artifact.whl
-	cp apps/pipelines/main.py spark/apps/
-
-run_scaled:
-	make down && docker-compose up --scale spark-worker=3
+	mypy --pretty apps --explicit-package-bases
