@@ -12,10 +12,6 @@ down:
 deep_down:
 	sudo $(DC) down --volumes --remove-orphans
 	sudo docker network prune -f
-
-deep_clean:
-	sudo $(DC) down --volumes --remove-orphans
-	sudo docker network prune -f
 	sudo docker builder prune -fa
 
 pg_dvd:
